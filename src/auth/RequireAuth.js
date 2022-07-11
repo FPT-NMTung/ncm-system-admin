@@ -9,7 +9,7 @@ function RequireAuth({ children }) {
   ) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    return <Navigate to="/" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;

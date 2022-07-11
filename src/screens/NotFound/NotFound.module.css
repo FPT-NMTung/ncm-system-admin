@@ -1,0 +1,29 @@
+.main {
+    width : 100vw;
+    height: 100vh;
+
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+}
+
+.main h1,
+.main p {
+    margin: 0;
+}
+
+.content {
+    border-left: 2px solid rgb(0, 0, 0);
+    padding    : 10px 20px;
+}
+
+.title {
+    margin-bottom: 20px;
+    display      : flex;
+    align-items  : center;
+    column-gap   : 15px;
+}
+
+.title>p {
+    font-size: 16px;
+}
