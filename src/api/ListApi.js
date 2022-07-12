@@ -4,6 +4,12 @@ export const UserApis = {
     method: "POST",
     contextType: "application/json",
   },
+  viewTeam: {
+    url: "/api/admin/team",
+    method: "GET",
+    contextType: "application/json",
+  },
 };
 
 export const ContactApis = {};
+
