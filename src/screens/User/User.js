@@ -2,13 +2,16 @@ import * as d3 from "d3";
 import { useState, useEffect, createRef } from "react";
 import FetchApi from "../../api/FetchApi";
 import { UserApis } from "../../api/ListApi";
-import { Grid } from "@nextui-org/react";
+import { Grid, Card } from "@nextui-org/react";
 import TableUser from "../../components/TableUser/TableUser";
 
 const User = () => {
   const [data, setData] = useState({});
+  const [dataUser, setDataUser] = useState({});
 
   const graphRef = createRef();
+
+  const handleClickUserGraph = (user) => {};
 
   const loadD3 = () => {
     d3.select(graphRef.current).select("svg").remove();
@@ -120,6 +123,7 @@ const User = () => {
       })
       .on("click", function (d) {
         centerNode(nodes, d.id);
+        handleClickUserGraph(d.id);
       });
 
     node
@@ -142,6 +146,7 @@ const User = () => {
       .attr("fill", "#b8b8b8")
       .attr("font-size", "8px")
       .attr("cursor", "pointer")
+      .attr("font-weight", "200")
       .text(function (d) {
         return `(${d.email})`;
       })
@@ -154,7 +159,7 @@ const User = () => {
 
     node
       .append("text")
-      .attr("fill", "#c94c08")
+      .attr("fill", "#F36823")
       .attr("font-size", "8px")
       .attr("cursor", "pointer")
       .text(function (d) {
@@ -170,7 +175,7 @@ const User = () => {
     centerNode(nodes);
   };
 
-  useEffect(() => {
+  const handleReload = () => {
     FetchApi(UserApis.viewTeam).then((a) => {
       const manager = {
         children: [...a.data],
@@ -179,13 +184,15 @@ const User = () => {
         parent: null,
         name: "Administrator",
       };
-      console.log(manager);
       setData(manager);
     });
+  };
+
+  useEffect(() => {
+    handleReload();
   }, []);
 
   useEffect(() => {
-    console.log(data);
     if (data.id !== undefined) {
       loadD3();
     }
@@ -193,18 +200,21 @@ const User = () => {
 
   return (
     <Grid.Container>
-      <Grid sm={6}>
-        <TableUser />
+      <Grid sm={6.5}>
+        <TableUser dataUser={data} onButtonReloadClick={handleReload} />
       </Grid>
-      <Grid sm={6}>
-        <div
-          ref={graphRef}
-          style={{
-            height: window.innerHeight - 40,
-            width: "100%",
-            backgroundColor: "#2b2b2b",
-          }}
-        />
+      <Grid sm={5.5}>
+        <Card>
+          <div
+            ref={graphRef}
+            style={{
+              height: window.innerHeight - 40,
+              width: "100%",
+              backgroundColor: "#2b2b2b",
+              cursor: "move",
+            }}
+          />
+        </Card>
       </Grid>
     </Grid.Container>
   );

@@ -7,7 +7,7 @@ const endpoint = "https://ncmsystem.azurewebsites.net";
  * @returns {Promise<any>} - A promise that resolves to the response.
  */
 const FetchApi = async (api, bodyObject) => {
-  const options = {
+  let options = {
     method: api.method,
     headers: {
       "Content-Type": api.contextType,
@@ -23,8 +23,18 @@ const FetchApi = async (api, bodyObject) => {
   if (response.status === 401) {
     const dataRefresh = await refreshToken();
     if (dataRefresh) {
-      localStorage.setItem("access_token", dataRefresh.access_token);
-      response = await fetch(`${endpoint}${api.url}`, options);
+      localStorage.setItem("access_token", dataRefresh.data.access_token);
+      let optionsR = {
+        method: api.method,
+        headers: {
+          "Content-Type": api.contextType,
+          Authorization: localStorage.getItem("access_token")
+            ? "Bearer " + localStorage.getItem("access_token")
+            : "",
+        },
+        body: bodyObject ? JSON.stringify(bodyObject) : null,
+      };
+      response = await fetch(`${endpoint}${api.url}`, optionsR);
     }
   }
 
@@ -42,7 +52,6 @@ const FetchApi = async (api, bodyObject) => {
 };
 
 const refreshToken = async () => {
-  debugger;
   if (!localStorage.getItem("refresh_token")) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");

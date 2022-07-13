@@ -1,11 +1,20 @@
-import { Card, Table, Grid } from "@nextui-org/react";
+import { Card, Table, Loading, Button } from "@nextui-org/react";
 import classes from "./TableUser.module.css";
+import { IoReloadCircleSharp } from "react-icons/io5";
 
-const TableUser = () => {
+const TableUser = ({ dataUser, onButtonReloadClick }) => {
   const columns = [
+    {
+      key: "id",
+      label: "Id",
+    },
     {
       key: "name",
       label: "Name",
+    },
+    {
+      key: "email",
+      label: "Email",
     },
     {
       key: "role",
@@ -16,32 +25,8 @@ const TableUser = () => {
       label: "Status",
     },
   ];
-  const rows = [
-    {
-      key: "1",
-      name: "Tony Reichert",
-      role: "CEO",
-      status: "Active",
-    },
-    {
-      key: "2",
-      name: "Zoey Lang",
-      role: "Technical Lead",
-      status: "Paused",
-    },
-    {
-      key: "3",
-      name: "Jane Fisher",
-      role: "Senior Developer",
-      status: "Active",
-    },
-    {
-      key: "4",
-      name: "William Howard",
-      role: "Community Manager",
-      status: "Vacation",
-    },
-  ];
+
+  const rows = dataUser.children;
   return (
     <div className={classes.main}>
       <Card
@@ -50,40 +35,47 @@ const TableUser = () => {
           padding: 20,
         }}
       >
-        <h2 className={classes.title}>Manager user</h2>
-        
+        <div className={classes.header}>
+          <h2 className={classes.title}>Manager user</h2>
+        </div>
       </Card>
       <Card>
-        <Table
-          aria-label="Example dynamic collection table with color selection"
-          color={"primary"}
-          selectionMode="multiple"
-          defaultSelectedKeys={["2"]}
-          containerCss={{
-            height: "auto",
-            width: "100%",
-          }}
-        >
-          <Table.Header columns={columns}>
-            {(column) => (
-              <Table.Column key={column.key}>{column.label}</Table.Column>
-            )}
-          </Table.Header>
-          <Table.Body items={rows}>
-            {(item) => (
-              <Table.Row key={item.key}>
-                {(columnKey) => <Table.Cell>{item[columnKey]}</Table.Cell>}
-              </Table.Row>
-            )}
-          </Table.Body>
-          <Table.Pagination
-            shadow
-            noMargin
-            align="center"
-            rowsPerPage={10}
-            onPageChange={(page) => console.log({ page })}
-          />
-        </Table>
+        {rows && (
+          <Table
+            aria-label="Example dynamic collection table with color selection"
+            color={"warning"}
+            selectionMode="single"
+            shadow={false}
+            containerCss={{
+              height: "auto",
+              width: "100%",
+            }}
+          >
+            <Table.Pagination
+              color={"warning"}
+              align="start"
+              rowsPerPage={10}
+              onPageChange={(page) => console.log({ page })}
+            />
+            <Table.Header columns={columns}>
+              {(column) => (
+                <Table.Column key={column.key}>{column.label}</Table.Column>
+              )}
+            </Table.Header>
+            <Table.Body items={rows}>
+              {(item) => (
+                <Table.Row key={item.key}>
+                  {(columnKey) => <Table.Cell>{item[columnKey]}</Table.Cell>}
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        )}
+        {!rows && (
+          <div className={classes.loading}>
+            <Loading color={"warning"} />
+          </div>
+        )}
       </Card>
     </div>
   );
