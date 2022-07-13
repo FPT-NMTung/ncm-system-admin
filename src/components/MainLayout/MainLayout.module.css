@@ -5,7 +5,7 @@
 }
 
 .navigation {
-    width : 80px !important;
+    width : 63px !important;
     height: calc(100vh - 40px) !important;
 
     margin       : 20px !important;
@@ -16,6 +16,8 @@
     display        : flex !important;
     flex-direction : column !important;
     justify-content: space-between !important;
+
+    position: fixed !important;
 }
 
 .mainNav {
@@ -24,7 +26,6 @@
     display        : flex !important;
     flex-direction : column !important;
     justify-content: space-between !important;
-
 }
 
 .logo {
@@ -39,7 +40,11 @@
 
 .body {
     width : 100% !important;
-    height: 100vh !important;
+    height: (100vh - 40px) !important;
+
+    margin: 20px !important;
+
+    padding-left: 100px !important;
 }
 
 .nav {

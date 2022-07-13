@@ -2,6 +2,8 @@ import * as d3 from "d3";
 import { useState, useEffect, createRef } from "react";
 import FetchApi from "../../api/FetchApi";
 import { UserApis } from "../../api/ListApi";
+import { Grid } from "@nextui-org/react";
+import TableUser from "../../components/TableUser/TableUser";
 
 const User = () => {
   const [data, setData] = useState({});
@@ -9,11 +11,13 @@ const User = () => {
   const graphRef = createRef();
 
   const loadD3 = () => {
+    d3.select(graphRef.current).select("svg").remove();
+
     const svg = d3
       .select(graphRef.current)
       .append("svg")
-      .attr("width", 800)
-      .attr("height", 800)
+      .attr("width", "100%")
+      .attr("height", "100%")
       .attr("style", "background: #2b2b2b")
       .append("g");
 
@@ -28,7 +32,6 @@ const User = () => {
     let zoom = d3.behavior.zoom().scaleExtent([0.1, 5]).on("zoom", handleZoom);
 
     function centerNode(source, userId) {
-      debugger
       console.log(data);
       const target = source.find((e) => {
         if (userId === undefined) {
@@ -40,8 +43,18 @@ const User = () => {
 
       let scale = zoom.scale();
 
-      let y = -target.x * scale + 400;
-      let x = -target.y * scale + 400;
+      let x, y;
+
+      if (userId == undefined) {
+        y = -target.x * scale + (window.innerHeight - 40) / 2;
+        x =
+          -target.y * scale +
+          (window.innerHeight - 40) / 2 -
+          (window.innerHeight - 40) / 4;
+      } else {
+        y = -target.x * scale + (window.innerHeight - 40) / 2;
+        x = -target.y * scale + (window.innerHeight - 40) / 2;
+      }
 
       d3.select("g")
         .transition()
@@ -56,7 +69,7 @@ const User = () => {
 
     d3.select(graphRef.current).call(zoom);
 
-    const tree = d3.layout.tree().size([800, 800]).nodeSize([40, 50]);
+    const tree = d3.layout.tree().size([800, 800]).nodeSize([50, 50]);
     const nodes = tree.nodes(data).reverse();
     const links = tree.links(nodes);
 
@@ -139,6 +152,21 @@ const User = () => {
         return d.x + 15.5;
       });
 
+    node
+      .append("text")
+      .attr("fill", "#c94c08")
+      .attr("font-size", "8px")
+      .attr("cursor", "pointer")
+      .text(function (d) {
+        return `Uid: ${d.id}`;
+      })
+      .attr("x", function (d) {
+        return d.y + 18;
+      })
+      .attr("y", function (d) {
+        return d.x - 8;
+      });
+
     centerNode(nodes);
   };
 
@@ -164,12 +192,21 @@ const User = () => {
   }, [data]);
 
   return (
-    <div>
-      <div
-        ref={graphRef}
-        style={{ height: "800px", width: "800px", backgroundColor: "#2b2b2b" }}
-      ></div>
-    </div>
+    <Grid.Container>
+      <Grid sm={6}>
+        <TableUser />
+      </Grid>
+      <Grid sm={6}>
+        <div
+          ref={graphRef}
+          style={{
+            height: window.innerHeight - 40,
+            width: "100%",
+            backgroundColor: "#2b2b2b",
+          }}
+        />
+      </Grid>
+    </Grid.Container>
   );
 };
 

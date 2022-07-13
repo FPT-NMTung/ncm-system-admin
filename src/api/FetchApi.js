@@ -18,12 +18,13 @@ const FetchApi = async (api, bodyObject) => {
     body: bodyObject ? JSON.stringify(bodyObject) : null,
   };
 
-  const response = await fetch(`${endpoint}${api.url}`, options);
+  let response = await fetch(`${endpoint}${api.url}`, options);
 
   if (response.status === 401) {
     const dataRefresh = await refreshToken();
     if (dataRefresh) {
       localStorage.setItem("access_token", dataRefresh.access_token);
+      response = await fetch(`${endpoint}${api.url}`, options);
     }
   }
 
@@ -45,13 +46,18 @@ const refreshToken = async () => {
   if (!localStorage.getItem("refresh_token")) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    // window.location.href = "/";
+    window.location.href = "/";
     return null;
   }
 
   const optionsRefresh = {
-    "Content-Type": "application/json",
-    Authorization: localStorage.getItem("refresh_token"),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      refresh_token: localStorage.getItem("refresh_token")
+    }),
+    method: "POST",
   };
 
   const responseRefresh = await fetch(
@@ -62,7 +68,7 @@ const refreshToken = async () => {
   if (!responseRefresh.ok) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    // window.location.href = "/";
+    window.location.href = "/";
     return null;
   }
 
