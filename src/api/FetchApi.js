@@ -4,9 +4,10 @@ const endpoint = "https://ncmsystem.azurewebsites.net";
  * Fetches data from the API and returns a promise.
  * @param {object} api - The API endpoint.
  * @param {string} bodyObject - The body of the request.
+ * @param {object} params - The body of the request.
  * @returns {Promise<any>} - A promise that resolves to the response.
  */
-const FetchApi = async (api, bodyObject) => {
+const FetchApi = async (api, bodyObject, params) => {
   let options = {
     method: api.method,
     headers: {
@@ -18,7 +19,14 @@ const FetchApi = async (api, bodyObject) => {
     body: bodyObject ? JSON.stringify(bodyObject) : null,
   };
 
-  let response = await fetch(`${endpoint}${api.url}`, options);
+  let paramString = "?"
+  for (const property in params) {
+    if (params.hasOwnProperty(property)) {
+      paramString += `${property}=${params[property]}&`;
+    }
+  }
+
+  let response = await fetch(`${endpoint}${api.url}${paramString}`, options);
 
   if (response.status === 401) {
     const dataRefresh = await refreshToken();
@@ -34,7 +42,7 @@ const FetchApi = async (api, bodyObject) => {
         },
         body: bodyObject ? JSON.stringify(bodyObject) : null,
       };
-      response = await fetch(`${endpoint}${api.url}`, optionsR);
+      response = await fetch(`${endpoint}${api.url}${paramString}`, optionsR);
     }
   }
 
