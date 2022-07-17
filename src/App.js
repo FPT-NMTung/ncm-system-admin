@@ -8,6 +8,7 @@ import NotFound from "./screens/NotFound/NotFound";
 import User from "./screens/User/User";
 import UserDetail from "./screens/UserDetail/UserDetail";
 import ImportUser from "./screens/ImportUser/ImportUser";
+import Contact from "./screens/Contact/Contact";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path="/user/:id" element={<UserDetail/>}/>
           <Route path="/user/import-user" element={<ImportUser/>}/>
         </Route>
-        <Route path="/manage-contact" element={<div>manage-contact</div>}/>
+        <Route path="/manage-contact" element={<Contact />}/>
       </Route>
       <Route path="/404" element={<NotFound/>}/>
       <Route path="*" element={<NotFound/>}/>
