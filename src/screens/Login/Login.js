@@ -1,15 +1,15 @@
-import { Card } from "@nextui-org/react";
-import { Input, Spacer, Button, Loading, Text } from "@nextui-org/react";
-import { Fragment } from "react";
-import FetchApi from "../../api/FetchApi";
-import { useState, createRef } from "react";
-import { UserApis } from "../../api/ListApi";
-import { useNavigate } from "react-router-dom";
-import { UserCodeError } from "../../api/CodeError";
+import { Card } from '@nextui-org/react';
+import { Input, Spacer, Button, Loading, Text } from '@nextui-org/react';
+import { Fragment, useEffect } from 'react';
+import FetchApi from '../../api/FetchApi';
+import { useState, createRef } from 'react';
+import { UserApis } from '../../api/ListApi';
+import { useNavigate } from 'react-router-dom';
+import { UserCodeError } from '../../api/CodeError';
 
-import classes from "./Login.module.css";
+import classes from './Login.module.css';
 
-const Login = () => {
+const Login = ({ title }) => {
   const [validEmail, setValidEmail] = useState(true);
   const [validPassword, setValidPassword] = useState(true);
 
@@ -22,13 +22,17 @@ const Login = () => {
 
   let navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = title;
+  }, []);
+
   const handleSubmit = () => {
     const valueRefEmail = refEmail.current.value.trim();
     const valueRefPassword = refPassword.current.value.trim();
 
-    if (valueRefEmail === "" || valueRefPassword === "") {
-      setValidEmail(valueRefEmail !== "");
-      setValidPassword(valueRefPassword !== "");
+    if (valueRefEmail === '' || valueRefPassword === '') {
+      setValidEmail(valueRefEmail !== '');
+      setValidPassword(valueRefPassword !== '');
       return;
     }
 
@@ -42,16 +46,16 @@ const Login = () => {
 
     FetchApi(UserApis.login, body)
       .then((res) => {
-        const payload = JSON.parse(atob(res.data.access_token.split(".")[1]));
+        const payload = JSON.parse(atob(res.data.access_token.split('.')[1]));
         if (payload.uid !== 4) {
           setLoading(false);
-          setStatus("You not have permission to access this page");
+          setStatus('You not have permission to access this page');
           return;
         }
 
-        localStorage.setItem("access_token", res.data.access_token);
-        localStorage.setItem("refresh_token", res.data.refresh_token);
-        navigate("/");
+        localStorage.setItem('access_token', res.data.access_token);
+        localStorage.setItem('refresh_token', res.data.refresh_token);
+        navigate('/');
       })
       .catch((err) => {
         setLoading(false);
@@ -80,7 +84,7 @@ const Login = () => {
                 }}
                 clearable
                 label="Email"
-                status={validEmail ? "default" : "error"}
+                status={validEmail ? 'default' : 'error'}
                 placeholder="example@domain.com"
               />
               <Spacer y={0.8} />
@@ -91,7 +95,7 @@ const Login = () => {
                   setValidPassword(true);
                 }}
                 clearable
-                status={validPassword ? "default" : "error"}
+                status={validPassword ? 'default' : 'error'}
                 label="Password"
               />
               {status && (
@@ -117,7 +121,7 @@ const Login = () => {
                   onClick={handleSubmit}
                 >
                   {loading && <Loading color="currentColor" size="xs" />}
-                  {!loading && "Login"}
+                  {!loading && 'Login'}
                 </Button>
               </div>
             </div>
