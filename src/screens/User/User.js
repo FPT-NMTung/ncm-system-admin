@@ -1,18 +1,18 @@
-import * as d3 from "d3";
-import { useState, useEffect, createRef } from "react";
-import FetchApi from "../../api/FetchApi";
-import { UserApis } from "../../api/ListApi";
-import { Grid, Card } from "@nextui-org/react";
-import TableUser from "../../components/TableUser/TableUser";
+import * as d3 from 'd3';
+import { useState, useEffect, createRef } from 'react';
+import FetchApi from '../../api/FetchApi';
+import { UserApis } from '../../api/ListApi';
+import { Grid, Card } from '@nextui-org/react';
+import TableUser from '../../components/TableUser/TableUser';
 
-const User = () => {
+const User = ({ title }) => {
   const [data, setData] = useState({});
   const [dataUserSelect, setDataUserSelect] = useState({});
 
   const graphRef = createRef();
 
   const handleClickUserGraph = (user) => {
-    setDataUserSelect({})
+    setDataUserSelect({});
     FetchApi(UserApis.viewTeam, undefined, {
       id: user.id,
     }).then((a) => {
@@ -21,25 +21,25 @@ const User = () => {
   };
 
   const loadD3 = () => {
-    d3.select(graphRef.current).select("svg").remove();
+    d3.select(graphRef.current).select('svg').remove();
 
     const svg = d3
       .select(graphRef.current)
-      .append("svg")
-      .attr("width", "100%")
-      .attr("height", "100%")
-      .attr("style", "background: #2b2b2b")
-      .append("g");
+      .append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .attr('style', 'background: #2b2b2b')
+      .append('g');
 
     function handleZoom() {
       console.log(123);
       svg.attr(
-        "transform",
-        "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")"
+        'transform',
+        'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')'
       );
     }
 
-    let zoom = d3.behavior.zoom().scaleExtent([0.1, 5]).on("zoom", handleZoom);
+    let zoom = d3.behavior.zoom().scaleExtent([0.1, 5]).on('zoom', handleZoom);
 
     function centerNode(source, userId) {
       const target = source.find((e) => {
@@ -65,12 +65,12 @@ const User = () => {
         x = -target.y * scale + (window.innerHeight - 40) / 2;
       }
 
-      d3.select("g")
+      d3.select('g')
         .transition()
         .duration(500)
         .attr(
-          "transform",
-          "translate(" + x + "," + y + ") scale(" + scale + ")"
+          'transform',
+          'translate(' + x + ',' + y + ') scale(' + scale + ')'
         );
       zoom.scale(scale);
       zoom.translate([x, y]);
@@ -92,89 +92,89 @@ const User = () => {
     });
 
     const link = svg
-      .selectAll(".link")
+      .selectAll('.link')
       .data(links)
       .enter()
-      .append("path")
-      .attr("class", "link")
-      .attr("d", line)
-      .attr("fill", "none")
-      .attr("stroke", "#3d3d3d")
-      .attr("stroke-width", "2px");
+      .append('path')
+      .attr('class', 'link')
+      .attr('d', line)
+      .attr('fill', 'none')
+      .attr('stroke', '#3d3d3d')
+      .attr('stroke-width', '2px');
 
     const node = svg
-      .selectAll(".node")
+      .selectAll('.node')
       .data(nodes)
       .enter()
-      .append("g")
-      .attr("class", "node");
+      .append('g')
+      .attr('class', 'node');
 
     node
-      .append("circle")
-      .attr("r", 8)
-      .attr("fill", function (d) {
-        return d.children ? "#ffffff" : "#707070";
+      .append('circle')
+      .attr('r', 8)
+      .attr('fill', function (d) {
+        return d.children ? '#ffffff' : '#707070';
       })
-      .attr("stroke", "#ffffff")
-      .attr("stroke-width", "2px")
-      .attr("cursor", "pointer")
-      .attr("title", function (d) {
+      .attr('stroke', '#ffffff')
+      .attr('stroke-width', '2px')
+      .attr('cursor', 'pointer')
+      .attr('title', function (d) {
         return d.name;
       })
-      .attr("cx", function (d) {
+      .attr('cx', function (d) {
         return d.y;
       })
-      .attr("cy", function (d) {
+      .attr('cy', function (d) {
         return d.x;
       })
-      .on("click", function (d) {
+      .on('click', function (d) {
         centerNode(nodes, d.id);
         handleClickUserGraph(d);
       });
 
     node
-      .append("text")
-      .attr("fill", "#b8b8b8")
-      .attr("font-size", "10px")
-      .attr("cursor", "pointer")
+      .append('text')
+      .attr('fill', '#b8b8b8')
+      .attr('font-size', '10px')
+      .attr('cursor', 'pointer')
       .text(function (d) {
         return d.name;
       })
-      .attr("x", function (d) {
+      .attr('x', function (d) {
         return d.y + 18;
       })
-      .attr("y", function (d) {
+      .attr('y', function (d) {
         return d.x + 3.5;
       });
 
     node
-      .append("text")
-      .attr("fill", "#b8b8b8")
-      .attr("font-size", "8px")
-      .attr("cursor", "pointer")
-      .attr("font-weight", "200")
+      .append('text')
+      .attr('fill', '#b8b8b8')
+      .attr('font-size', '8px')
+      .attr('cursor', 'pointer')
+      .attr('font-weight', '200')
       .text(function (d) {
         return `(${d.email})`;
       })
-      .attr("x", function (d) {
+      .attr('x', function (d) {
         return d.y + 18;
       })
-      .attr("y", function (d) {
+      .attr('y', function (d) {
         return d.x + 15.5;
       });
 
     node
-      .append("text")
-      .attr("fill", "#F36823")
-      .attr("font-size", "8px")
-      .attr("cursor", "pointer")
+      .append('text')
+      .attr('fill', '#F36823')
+      .attr('font-size', '8px')
+      .attr('cursor', 'pointer')
       .text(function (d) {
         return `Uid: ${d.id}`;
       })
-      .attr("x", function (d) {
+      .attr('x', function (d) {
         return d.y + 18;
       })
-      .attr("y", function (d) {
+      .attr('y', function (d) {
         return d.x - 8;
       });
 
@@ -188,9 +188,8 @@ const User = () => {
     });
   };
 
-  
-
   useEffect(() => {
+    document.title = title;
     handleReload();
   }, []);
 
@@ -203,7 +202,10 @@ const User = () => {
   return (
     <Grid.Container>
       <Grid sm={6.5}>
-        <TableUser dataUser={dataUserSelect} onButtonReloadClick={handleReload} />
+        <TableUser
+          dataUser={dataUserSelect}
+          onButtonReloadClick={handleReload}
+        />
       </Grid>
       <Grid sm={5.5}>
         <Card>
@@ -211,9 +213,9 @@ const User = () => {
             ref={graphRef}
             style={{
               height: window.innerHeight - 40,
-              width: "100%",
-              backgroundColor: "#2b2b2b",
-              cursor: "move",
+              width: '100%',
+              backgroundColor: '#2b2b2b',
+              cursor: 'move',
             }}
           />
         </Card>

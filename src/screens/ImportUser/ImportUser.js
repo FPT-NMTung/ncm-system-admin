@@ -1,6 +1,11 @@
-import classes from "./ImportUser.module.css";
+import { useEffect } from 'react';
+import classes from './ImportUser.module.css';
 
-const ImportUser = () => {
+const ImportUser = ({ title }) => {
+  useEffect(() => {
+    document.title = title;
+  }, []);
+
   return (
     <div>
       <h1>Import User</h1>
