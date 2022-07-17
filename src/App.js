@@ -6,6 +6,7 @@ import MainLayout from "./components/MainLayout/MainLayout";
 import Dashboard from "./screens/Dashboard/Dashboard";
 import NotFound from "./screens/NotFound/NotFound";
 import User from "./screens/User/User";
+import Contact from "./screens/Contact/Contact";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route path="/" element={<RequireAuth><MainLayout/></RequireAuth>}>
           <Route index element={<Dashboard/>}/>
           <Route path="/user" element={<User/>}/>
-          <Route path="/manage-contact" element={<div>manage-contact</div>}/>
+          <Route path="/manage-contact" element={<Contact/>}/>
         </Route>
         <Route path="/404" element={<NotFound/>}/>
         <Route path="*" element={<NotFound/>}/>
