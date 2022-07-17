@@ -8,6 +8,7 @@ import NotFound from "./screens/NotFound/NotFound";
 import User from "./screens/User/User";
 import UserDetail from "./screens/UserDetail/UserDetail";
 import ImportUser from "./screens/ImportUser/ImportUser";
+import Contact from "./screens/Contact/Contact";
 import RequestChangeOwnerContact from "./screens/RequestChangeOwnerContact/RequestChangeOwnerContact";
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
           <Route path="/user/:id" element={<UserDetail title="User Detail | Administrator"/>}/>
           <Route path="/user/import-user" element={<ImportUser title="Import User | Administrator"/>}/>
         </Route>
-        <Route path="/manage-contact" element={<div>manage-contact</div>}/>
+        <Route path="/manage-contact" element={<Contact />}/>
       </Route>
       <Route path="/request-change-owner-contact/:id/:code" element={<RequestChangeOwnerContact title="Request Change Owner Contact"/>}/>
       <Route path="/404" element={<NotFound title="404 - Page not found"/>}/>
