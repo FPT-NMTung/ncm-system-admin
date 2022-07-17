@@ -6,21 +6,28 @@ import MainLayout from "./components/MainLayout/MainLayout";
 import Dashboard from "./screens/Dashboard/Dashboard";
 import NotFound from "./screens/NotFound/NotFound";
 import User from "./screens/User/User";
+import UserDetail from "./screens/UserDetail/UserDetail";
+import ImportUser from "./screens/ImportUser/ImportUser";
+import Contact from "./screens/Contact/Contact";
+import RequestChangeOwnerContact from "./screens/RequestChangeOwnerContact/RequestChangeOwnerContact";
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route path="/login" element={<NoRequireAuth><Login/></NoRequireAuth>}/>
-        <Route path="/" element={<RequireAuth><MainLayout/></RequireAuth>}>
-          <Route index element={<Dashboard/>}/>
-          <Route path="/user" element={<User/>}/>
-          <Route path="/manage-contact" element={<div>manage-contact</div>}/>
+    <Routes>
+      <Route path="/login" element={<NoRequireAuth><Login title="Login | Administrator"/></NoRequireAuth>}/>
+      <Route path="/" element={<RequireAuth><MainLayout/></RequireAuth>}>
+        <Route index element={<Dashboard title="Dashboard | Administrator"/>}/>
+        <Route path="/user">
+          <Route index element={<User title="Manager User | Administrator"/>}/>
+          <Route path="/user/:id" element={<UserDetail title="User Detail | Administrator"/>}/>
+          <Route path="/user/import-user" element={<ImportUser title="Import User | Administrator"/>}/>
         </Route>
-        <Route path="/404" element={<NotFound/>}/>
-        <Route path="*" element={<NotFound/>}/>
-      </Routes>
-    </div>
+        <Route path="/manage-contact" element={<Contact />}/>
+      </Route>
+      <Route path="/request-change-owner-contact/:id/:code" element={<RequestChangeOwnerContact title="Request Change Owner Contact"/>}/>
+      <Route path="/404" element={<NotFound title="404 - Page not found"/>}/>
+      <Route path="*" element={<NotFound title="404 - Page not found"/>}/>
+    </Routes>
   );
 }
 

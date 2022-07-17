@@ -11,5 +11,10 @@ export const UserApis = {
   },
 };
 
-export const ContactApis = {};
-
+export const ContactApis = {
+  requestChangeOwnerContact: {
+    url: "/api/contacts/request/info/{0}/{1}",
+    method: "GET",
+    contextType: "application/json",
+  }
+};

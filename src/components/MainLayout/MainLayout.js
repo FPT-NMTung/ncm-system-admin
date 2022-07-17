@@ -21,7 +21,7 @@ const MainLayout = () => {
     <div className={classes.main}>
       <Card className={classes.navigation}>
         <div className={classes.mainNav}>
-          <img className={classes.logo} src="" />
+          <img className={classes.logo} src="https://i.ibb.co/G5xBgXh/293372710-1185252338715897-8334603211120389033-n-cropped.png" />
           <div className={classes.nav}>
           <div className={classes.itemNav}>
               <Tooltip

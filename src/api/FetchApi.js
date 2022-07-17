@@ -1,12 +1,15 @@
 const endpoint = "https://ncmsystem.azurewebsites.net";
+// const endpoint = "https://localhost:44305";
 
 /**
  * Fetches data from the API and returns a promise.
  * @param {object} api - The API endpoint.
  * @param {string} bodyObject - The body of the request.
+ * @param {object} params - The parameters of the request.
+ * @param {array<string>} pathValiable - The path variables of the request.
  * @returns {Promise<any>} - A promise that resolves to the response.
  */
-const FetchApi = async (api, bodyObject) => {
+const FetchApi = async (api, bodyObject, params, pathValiable) => {
   let options = {
     method: api.method,
     headers: {
@@ -18,7 +21,20 @@ const FetchApi = async (api, bodyObject) => {
     body: bodyObject ? JSON.stringify(bodyObject) : null,
   };
 
-  let response = await fetch(`${endpoint}${api.url}`, options);
+  let paramString = "?"
+  for (const property in params) {
+    if (params.hasOwnProperty(property)) {
+      paramString += `${property}=${encodeURIComponent(params[property])}&`;
+    }
+  }
+  
+  if (pathValiable != undefined && pathValiable.length > 0) {
+    pathValiable.forEach((element, index) => {
+      api.url = api.url.replace(`{${index}}`, element);
+    });
+  }
+
+  let response = await fetch(`${endpoint}${api.url}${paramString}`, options);
 
   if (response.status === 401) {
     const dataRefresh = await refreshToken();
@@ -34,7 +50,7 @@ const FetchApi = async (api, bodyObject) => {
         },
         body: bodyObject ? JSON.stringify(bodyObject) : null,
       };
-      response = await fetch(`${endpoint}${api.url}`, optionsR);
+      response = await fetch(`${endpoint}${api.url}${paramString}`, optionsR);
     }
   }
 
