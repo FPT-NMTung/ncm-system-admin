@@ -7,11 +7,18 @@ import TableUser from "../../components/TableUser/TableUser";
 
 const User = () => {
   const [data, setData] = useState({});
-  const [dataUser, setDataUser] = useState({});
+  const [dataUserSelect, setDataUserSelect] = useState({});
 
   const graphRef = createRef();
 
-  const handleClickUserGraph = (user) => {};
+  const handleClickUserGraph = (user) => {
+    setDataUserSelect({})
+    FetchApi(UserApis.viewTeam, undefined, {
+      id: user.id,
+    }).then((a) => {
+      setDataUserSelect(a.data[0]);
+    });
+  };
 
   const loadD3 = () => {
     d3.select(graphRef.current).select("svg").remove();
@@ -35,10 +42,9 @@ const User = () => {
     let zoom = d3.behavior.zoom().scaleExtent([0.1, 5]).on("zoom", handleZoom);
 
     function centerNode(source, userId) {
-      console.log(data);
       const target = source.find((e) => {
         if (userId === undefined) {
-          return e.parent === null;
+          return e.parent === undefined;
         } else {
           return e.id === userId;
         }
@@ -123,7 +129,7 @@ const User = () => {
       })
       .on("click", function (d) {
         centerNode(nodes, d.id);
-        handleClickUserGraph(d.id);
+        handleClickUserGraph(d);
       });
 
     node
@@ -177,16 +183,12 @@ const User = () => {
 
   const handleReload = () => {
     FetchApi(UserApis.viewTeam).then((a) => {
-      const manager = {
-        children: [...a.data],
-        email: "admin@gmail.com",
-        id: 0,
-        parent: null,
-        name: "Administrator",
-      };
-      setData(manager);
+      setData(a.data[0]);
+      setDataUserSelect(a.data[0]);
     });
   };
+
+  
 
   useEffect(() => {
     handleReload();
@@ -201,7 +203,7 @@ const User = () => {
   return (
     <Grid.Container>
       <Grid sm={6.5}>
-        <TableUser dataUser={data} onButtonReloadClick={handleReload} />
+        <TableUser dataUser={dataUserSelect} onButtonReloadClick={handleReload} />
       </Grid>
       <Grid sm={5.5}>
         <Card>

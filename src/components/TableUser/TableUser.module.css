@@ -9,14 +9,46 @@
 
 .loading {
     height: 400px;
-    
-    display: flex;
+
+    display        : flex;
     justify-content: center;
-    align-items: center;
+    align-items    : center;
 }
 
 .header {
-    display: flex;
+    display        : flex;
     justify-content: space-between;
-    align-items: center;
+    align-items    : center;
+}
+
+.active {
+    display         : inline-block;
+    padding         : 4px 8px;
+    border-radius   : 10em;
+    background-color: #efffe7;
+    color           : #006600;
+}
+
+.deactive {
+    display         : inline-block;
+    padding         : 4px 8px;
+    border-radius   : 10em;
+    background-color: #ffecec;
+    color           : #8b0000;
+}
+
+.titleTable {
+    padding: 20px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.titleTable span {
+    font-weight: bold;
+}
+
+.titleManage {
+    padding: 20px;
+    margin: 0;
+    font-weight: 500;
 }
