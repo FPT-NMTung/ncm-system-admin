@@ -4,6 +4,7 @@ import FetchApi from '../../api/FetchApi';
 import { UserApis } from '../../api/ListApi';
 import { Grid, Card } from '@nextui-org/react';
 import TableUser from '../../components/TableUser/TableUser';
+import classes from './User.module.css'
 
 const User = ({ title }) => {
   const [data, setData] = useState({});
