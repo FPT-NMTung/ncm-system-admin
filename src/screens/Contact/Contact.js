@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Table, Row, Col, Tooltip, User, Text, Card } from "@nextui-org/react";
 import { MdRemoveRedEye, MdOutlineModeEditOutline, MdDeleteOutline } from 'react-icons/md';
 import TableContact from '../../components/TableContact/TableContact';
@@ -63,7 +63,10 @@ const users = [
     },
 ];
 
-const Contact = () => {
+const Contact = ({title}) => {
+    useEffect(() => {
+        document.title = title;
+    }, []);
 
     const renderCell = (user, columnKey) => {
         const cellValue = user[columnKey];

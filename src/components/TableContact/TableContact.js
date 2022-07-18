@@ -40,6 +40,11 @@ const TableContact = () => {
                     <Table.Cell>Vacation</Table.Cell>
                 </Table.Row>
             </Table.Body>
+            <Table.Pagination
+                align="center"
+                rowsPerPage={10}
+                onPageChange={(page) => console.log({ page })}
+            />
         </Table>
     );
 };
