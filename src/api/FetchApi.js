@@ -5,7 +5,7 @@ const endpoint = "https://ncmsystem.azurewebsites.net";
 /**
  * Fetches data from the API and returns a promise.
  * @param {object} api - The API endpoint.
- * @param {string} bodyObject - The body of the request.
+ * @param {object} bodyObject - The body of the request.
  * @param {object} params - The parameters of the request.
  * @param {array<string>} pathValiable - The path variables of the request.
  * @returns {Promise<any>} - A promise that resolves to the response.
@@ -19,8 +19,14 @@ const FetchApi = async (api, bodyObject, params, pathValiable) => {
         ? 'Bearer ' + localStorage.getItem('access_token')
         : '',
     },
-    body: bodyObject ? JSON.stringify(bodyObject) : null,
+    body: api.contextType === "multipart/form-data" ? bodyObject : bodyObject ? JSON.stringify(bodyObject) : null,
   };
+
+  if (api.contextType === "multipart/form-data") {
+    delete options.headers['Content-Type'];
+  }
+
+  console.log(options);
 
   let paramString = '?';
   for (const property in params) {
