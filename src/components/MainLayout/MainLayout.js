@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Card, Tooltip, Button } from "@nextui-org/react";
 import { FaUserAlt, FaAddressCard } from "react-icons/fa";
 import { IoIosExit } from "react-icons/io";
-import { MdSpaceDashboard } from "react-icons/md";
+import { MdSpaceDashboard, MdCloudUpload } from "react-icons/md";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import classes from "./MainLayout.module.css";
@@ -71,6 +71,23 @@ const MainLayout = () => {
                   }
                 >
                   <FaAddressCard size={20} color="ffffff" />
+                </NavLink>
+              </Tooltip>
+            </div>
+            <div className={classes.itemNav}>
+              <Tooltip
+                placement="right"
+                content="Import user"
+                color="invert"
+                className={classes.tooltip}
+              >
+                <NavLink
+                  to="/import-user"
+                  className={({ isActive }) =>
+                    isActive ? classes.activeNav : undefined
+                  }
+                >
+                  <MdCloudUpload size={20} color="ffffff" />
                 </NavLink>
               </Tooltip>
             </div>
