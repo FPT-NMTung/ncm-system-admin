@@ -1,5 +1,6 @@
 const endpoint = "https://ncmsystem.azurewebsites.net";
 // const endpoint = "https://localhost:44305";
+// const endpoint = 'https://test-ncm-system.azurewebsites.net';
 
 /**
  * Fetches data from the API and returns a promise.
@@ -13,21 +14,21 @@ const FetchApi = async (api, bodyObject, params, pathValiable) => {
   let options = {
     method: api.method,
     headers: {
-      "Content-Type": api.contextType,
-      Authorization: localStorage.getItem("access_token")
-        ? "Bearer " + localStorage.getItem("access_token")
-        : "",
+      'Content-Type': api.contextType,
+      Authorization: localStorage.getItem('access_token')
+        ? 'Bearer ' + localStorage.getItem('access_token')
+        : '',
     },
     body: bodyObject ? JSON.stringify(bodyObject) : null,
   };
 
-  let paramString = "?"
+  let paramString = '?';
   for (const property in params) {
     if (params.hasOwnProperty(property)) {
       paramString += `${property}=${encodeURIComponent(params[property])}&`;
     }
   }
-  
+
   if (pathValiable != undefined && pathValiable.length > 0) {
     pathValiable.forEach((element, index) => {
       api.url = api.url.replace(`{${index}}`, element);
@@ -39,14 +40,14 @@ const FetchApi = async (api, bodyObject, params, pathValiable) => {
   if (response.status === 401) {
     const dataRefresh = await refreshToken();
     if (dataRefresh) {
-      localStorage.setItem("access_token", dataRefresh.data.access_token);
+      localStorage.setItem('access_token', dataRefresh.data.access_token);
       let optionsR = {
         method: api.method,
         headers: {
-          "Content-Type": api.contextType,
-          Authorization: localStorage.getItem("access_token")
-            ? "Bearer " + localStorage.getItem("access_token")
-            : "",
+          'Content-Type': api.contextType,
+          Authorization: localStorage.getItem('access_token')
+            ? 'Bearer ' + localStorage.getItem('access_token')
+            : '',
         },
         body: bodyObject ? JSON.stringify(bodyObject) : null,
       };
@@ -68,21 +69,21 @@ const FetchApi = async (api, bodyObject, params, pathValiable) => {
 };
 
 const refreshToken = async () => {
-  if (!localStorage.getItem("refresh_token")) {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    window.location.href = "/";
+  if (!localStorage.getItem('refresh_token')) {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    window.location.href = '/';
     return null;
   }
 
   const optionsRefresh = {
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      refresh_token: localStorage.getItem("refresh_token")
+      refresh_token: localStorage.getItem('refresh_token'),
     }),
-    method: "POST",
+    method: 'POST',
   };
 
   const responseRefresh = await fetch(
@@ -91,9 +92,9 @@ const refreshToken = async () => {
   );
 
   if (!responseRefresh.ok) {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    window.location.href = "/";
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    window.location.href = '/';
     return null;
   }
 

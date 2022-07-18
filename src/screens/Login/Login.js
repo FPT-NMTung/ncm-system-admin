@@ -72,7 +72,7 @@ const Login = ({ title }) => {
         className={classes.logo}
       />
       <div className={classes.card}>
-        <Card>
+        <Card css={{padding: '5px 10px' }}>
           <Card.Body>
             <div className={classes.cardBody}>
               <h3 className={classes.title}>Welcome Administrator</h3>
