@@ -19,10 +19,10 @@ function App() {
         <Route index element={<Dashboard title="Dashboard | Administrator"/>}/>
         <Route path="/user">
           <Route index element={<User title="Manager User | Administrator"/>}/>
-          <Route path="/user/:id" element={<UserDetail title="User Detail | Administrator"/>}/>
-          <Route path="/user/import-user" element={<ImportUser title="Import User | Administrator"/>}/>
+          <Route path="/user/:id" element={<UserDetail title="User Detail | Administrator"/>}/>        
         </Route>
-        <Route path="/manage-contact" element={<Contact />}/>
+        <Route path="/manage-contact" element={<Contact title="Manager Contact | Administrator"/>}/>
+        <Route path="/import-user" element={<ImportUser title="Import User | Administrator"/>}/>
       </Route>
       <Route path="/request-change-owner-contact/:id/:code" element={<RequestChangeOwnerContact title="Request Change Owner Contact"/>}/>
       <Route path="/404" element={<NotFound title="404 - Page not found"/>}/>
