@@ -1,53 +1,53 @@
 import React, { Component } from 'react';
 import { Table } from '@nextui-org/react';
 
+import classes from './TableContact.module.css';
 
-const TableContact = () => {
-    return (
-        <Table
-            aria-label="Example table with custom cells"
-            selectionMode="multiple"
-            color={"warning"}
-            css={{
-                height: "auto",
-                width: "100%",
-            }}
-        >
-            <Table.Header>
-                <Table.Column>NAME</Table.Column>
-                <Table.Column>JOB</Table.Column>
-                <Table.Column>COMPANY</Table.Column>
-            </Table.Header>
-            <Table.Body>
-                <Table.Row key="1">
-                    <Table.Cell>Tony Reichert</Table.Cell>
-                    <Table.Cell>CEO</Table.Cell>
-                    <Table.Cell>Active</Table.Cell>
-                </Table.Row>
-                <Table.Row key="2">
-                    <Table.Cell>Zoey Lang</Table.Cell>
-                    <Table.Cell>Technical Lead</Table.Cell>
-                    <Table.Cell>Paused</Table.Cell>
-                </Table.Row>
-                <Table.Row key="3">
-                    <Table.Cell>Jane Fisher</Table.Cell>
-                    <Table.Cell>Senior Developer</Table.Cell>
-                    <Table.Cell>Active</Table.Cell>
-                </Table.Row>
-                <Table.Row key="4">
-                    <Table.Cell>William Howard</Table.Cell>
-                    <Table.Cell>Community Manager</Table.Cell>
-                    <Table.Cell>Vacation</Table.Cell>
-                </Table.Row>
-            </Table.Body>
-            <Table.Pagination
-                align="center"
-                rowsPerPage={10}
-                onPageChange={(page) => console.log({ page })}
-            />
-        </Table>
-    );
+const TableContact = ({ data, onSelectColumn }) => {
+  return (
+    <Table
+      aria-label="Example table with custom cells"
+      selectionMode="single"
+      onSelectionChange={onSelectColumn}
+      color={'warning'}
+      css={{
+        height: 'auto',
+        width: '100%',
+      }}
+    >
+      <Table.Header>
+        <Table.Column>Id</Table.Column>
+        <Table.Column>Name</Table.Column>
+        <Table.Column>Email</Table.Column>
+        <Table.Column>Role</Table.Column>
+        <Table.Column>Email manager</Table.Column>
+      </Table.Header>
+      <Table.Body>
+        {data.map((item, index) => {
+          return (
+            <Table.Row key={index}>
+              <Table.Cell>{item.id}</Table.Cell>
+              <Table.Cell>{item.name}</Table.Cell>
+              <Table.Cell>{item.email}</Table.Cell>
+              <Table.Cell>
+                {item.role_id === 1
+                  ? 'Staff'
+                  : item.role_id === 2
+                  ? 'Manager'
+                  : item.role_id === 3
+                  ? 'Marketer'
+                  : 'Administrator'}
+              </Table.Cell>
+              <Table.Cell>
+                {item.manager === null ? <span className={classes.emailManager}>(Not setup)</span> : item.manager}
+              </Table.Cell>
+            </Table.Row>
+          );
+        })}
+      </Table.Body>
+      <Table.Pagination align="right" rowsPerPage={10} />
+    </Table>
+  );
 };
-
 
 export default TableContact;
