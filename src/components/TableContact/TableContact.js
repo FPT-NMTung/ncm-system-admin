@@ -3,11 +3,12 @@ import { Table } from '@nextui-org/react';
 
 import classes from './TableContact.module.css';
 
-const TableContact = ({ data }) => {
+const TableContact = ({ data, onSelectColumn }) => {
   return (
     <Table
       aria-label="Example table with custom cells"
       selectionMode="single"
+      onSelectionChange={onSelectColumn}
       color={'warning'}
       css={{
         height: 'auto',

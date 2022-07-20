@@ -18,11 +18,16 @@ const ImportUser = ({ title }) => {
   const [statusUpload, setStatusUpload] = useState('none');
 
   const [listUser, setListUser] = useState([]);
+  const [selectUser, setSelectUser] = useState(undefined);
 
   const handleChangeVisibleUpload = () => {
     setShowModalUpload(!showModalUpload);
     setStatusUpload('none');
   };
+
+  const handleSelectUser = (user) => {
+    console.log(user);
+  }
 
   const loadDataUser = () => {
     FetchApi(ImportUserApis.listUserImport, undefined, undefined, undefined)
@@ -111,7 +116,7 @@ const ImportUser = ({ title }) => {
               minHeight: 500
             }}
           >
-            {!(listUser.length === 0) && <TableContact data={listUser}/>}
+            {!(listUser.length === 0) && <TableContact data={listUser} onSelectColumn={handleSelectUser}/>}
             {(listUser.length === 0) && <Loading/>}
           </Card>
         </Grid>
