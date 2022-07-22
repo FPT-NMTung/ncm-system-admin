@@ -20,3 +20,9 @@
     justify-content: space-around;
     width: 100%;
 }
+
+.alert {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
