@@ -20,10 +20,14 @@ code {
     monospace;
 }
 
-.my-select-container .ant-select .ant-select-selector {
-  border-radius: 0.75rem;
-  background-color: #f1f3f5;
-  border: none;
+
+
+@import '~antd/dist/antd.css';
+
+.ant-select .ant-select-selector {
+  border-radius: 0.75rem !important;
+  background-color: #f1f3f5 !important;
+  border: none !important;
 }
 
 .ant-select-focused .ant-select-selector,
@@ -33,5 +37,6 @@ code {
   box-shadow: none !important;
 }
 
-@import '~antd/dist/antd.css';
-
+.ant-select-status-error .ant-select-selector {
+  background-color: #fdd8e5 !important;
+}
