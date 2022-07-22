@@ -10,6 +10,7 @@ import UserDetail from "./screens/UserDetail/UserDetail";
 import ImportUser from "./screens/ImportUser/ImportUser";
 import Contact from "./screens/Contact/Contact";
 import RequestChangeOwnerContact from "./screens/RequestChangeOwnerContact/RequestChangeOwnerContact";
+import Test from "./screens/Test/Test";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/manage-contact" element={<Contact title="Manager Contact | Administrator"/>}/>
         <Route path="/import-user" element={<ImportUser title="Import User | Administrator"/>}/>
       </Route>
+      <Route path="/test" element={<Test title="test"/>}/>
       <Route path="/request-change-owner-contact/:id/:code" element={<RequestChangeOwnerContact title="Request Change Owner Contact"/>}/>
       <Route path="/404" element={<NotFound title="404 - Page not found"/>}/>
       <Route path="*" element={<NotFound title="404 - Page not found"/>}/>
