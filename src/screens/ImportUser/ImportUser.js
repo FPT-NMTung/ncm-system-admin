@@ -107,6 +107,19 @@ const ImportUser = ({ title }) => {
               >
                 Upload file data
               </Button>
+              <Button
+                flat
+                auto
+                css={{ width: 200 }}
+                icon={<IoMdCloudUpload size={20} />}
+                onClick={() => {
+                  FetchApi(ImportUserApis.excuteImport, undefined, undefined, ['136']).then(() => {
+                    console.log('done');
+                  })
+                }}
+              >
+                Test
+              </Button>
             </div>
           </Card>
         </Grid>

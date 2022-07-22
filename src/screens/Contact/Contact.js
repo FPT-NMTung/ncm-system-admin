@@ -69,8 +69,6 @@ const Contact = ({ title }) => {
     setListSelectContact([...key])
   }
 
-  console.log(listUser)
-
   return (
     <Grid.Container css={{ paddingBottom: 30 }}>
       <Grid sm={6.5}>
@@ -112,7 +110,6 @@ const Contact = ({ title }) => {
             <Button>Transfer</Button>
           </div>
         </Card>
-
       </Grid.Container>
     </Grid.Container>
   );

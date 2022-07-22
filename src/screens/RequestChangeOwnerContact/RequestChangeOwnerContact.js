@@ -23,7 +23,6 @@ const RequestChangeOwnerContact = ({ title }) => {
       code,
     ])
       .then((res) => {
-        console.log(res);
         setData(res.data);
       })
       .catch(() => {
