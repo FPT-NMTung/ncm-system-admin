@@ -5,7 +5,7 @@ import TableUserDeActive from '../../components/TableUserDeActive/TableUserDeAct
 import FetchApi from '../../api/FetchApi';
 import { ContactApis, UserApis } from '../../api/ListApi';
 import TableContactDeActive from '../../components/TableContactDeActive/TableContactDeActive';
-import AutoCompleteCustomer from '../../CommonComponent/AutoComplete/AutoCompleteCustomer';
+import AutoCompleteCustom from '../../CommonComponent/AutoComplete/AutoCompleteCustom';
 
 const Contact = ({ title }) => {
   const [listUserDeActive, setListUserDeActive] = useState([]);
@@ -14,6 +14,8 @@ const Contact = ({ title }) => {
   const [loadingContact, setLoadingContact] = useState(false);
   const [listSelectContact, setListSelectContact] = useState([]);
   const [listUser, setListUser] = useState([]);
+  const [email, setEmail] = useState('');
+
 
   useEffect(() => {
     document.title = title;
@@ -39,7 +41,7 @@ const Contact = ({ title }) => {
         let listTemp = []
         res.data.map((item) => {
           listTemp.push({
-            label: item.email,
+            value: item.email,
           })
         })
         setListUser(listTemp)
@@ -67,6 +69,14 @@ const Contact = ({ title }) => {
 
   const onSelectColumnContact = (key) => {
     setListSelectContact([...key])
+  }
+
+  const onSelect = (value) => {
+    setEmail(value);
+  }
+
+  const onClear = () => {
+    setEmail('');
   }
 
   return (
@@ -98,7 +108,7 @@ const Contact = ({ title }) => {
           {loadingContact && !listContact.length && <div className={classes.loadingContact}><Loading color='warning' /></div>}
           {!listContact.length && !loadingContact && <div className={classes.loadingContact}><Text h4 size={16} color="#BDBDBD">Empty</Text></div>}
         </Card>
-        <Card
+        {listContact.length !== 0 &&<Card
           css={{
             marginTop: 20,
             marginBottom: 20,
@@ -106,10 +116,11 @@ const Contact = ({ title }) => {
           }}
         >
           <div className={classes.footerTabbleContact}>
-            <AutoCompleteCustomer listUser={listUser} />
+            <AutoCompleteCustom listUser={listUser} style={{width: 300}} placeholder={'Input Email'} onSelect={onSelect} allowClear={true} notFoundContent={'Not found'} onClear={onClear}/>
             <Button>Transfer</Button>
           </div>
-        </Card>
+        </Card>}
+
       </Grid.Container>
     </Grid.Container>
   );

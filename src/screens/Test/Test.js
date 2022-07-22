@@ -22,7 +22,7 @@ const Test = ({ title }) => {
       <div>Test</div>
       <Button onClick={() => handleButtonClick('1')}>Test id 1</Button>
       <Button onClick={() => handleButtonClick('2')}>Test id 2</Button>
-
+      <AutoComplete status='error' style={{width: 200}}/>
     </div>
   );
 };
