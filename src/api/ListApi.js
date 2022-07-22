@@ -50,7 +50,7 @@ export const ImportUserApis = {
     method: 'GET',
     contextType: 'application/json',
   },
-  excuteImport: {
+  executeImport: {
     url: '/api/admin/user-imported/{0}',
     method: 'POST',
     contextType: 'application/json',

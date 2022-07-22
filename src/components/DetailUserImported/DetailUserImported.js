@@ -4,6 +4,7 @@ import { FaUserEdit } from 'react-icons/fa';
 import classes from './DetailUserImported.module.css';
 
 const DetailUserImported = ({ userData }) => {
+
   const refName = useRef();
   const refEmail = useRef();
   const refRole = useRef();
@@ -32,7 +33,7 @@ const DetailUserImported = ({ userData }) => {
           : userData.role_id === 2
           ? 'Manager'
           : userData.role_id === 3
-          ? 'Marketer'
+          ? 'Sale Director'
           : 'Admin';
       refManager.current.value = userData.manager;
     }
@@ -82,7 +83,7 @@ const DetailUserImported = ({ userData }) => {
               label="Manager"
             />
             <Spacer y={1.5} />
-            <Button auto>Save</Button>
+            <Button disabled={userData.status === 2} auto>Save</Button>
           </div>
         </div>
       )}
