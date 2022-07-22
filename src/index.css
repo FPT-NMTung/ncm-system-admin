@@ -20,4 +20,18 @@ code {
     monospace;
 }
 
+.my-select-container .ant-select .ant-select-selector {
+  border-radius: 0.75rem;
+  background-color: #f1f3f5;
+  border: none;
+}
+
+.ant-select-focused .ant-select-selector,
+.ant-select-selector:focus,
+.ant-select-selector:active,
+.ant-select-open .ant-select-selector {
+  box-shadow: none !important;
+}
+
 @import '~antd/dist/antd.css';
+
