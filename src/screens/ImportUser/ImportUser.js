@@ -62,7 +62,6 @@ const ImportUser = ({ title }) => {
   };
 
   const executeImport = async () => {
-    console.log(123);
     for (let index = 0; index < listUser.length; index++) {
       const user = listUser[index];
 
@@ -71,11 +70,9 @@ const ImportUser = ({ title }) => {
           `${user.id}`,
         ])
           .then(() => {
-            console.log('success', user.id);
             user.status = 2;
           })
           .catch(() => {
-            console.log('error', user.id);
             user.status = 3;
           });
         setListUser([...listUser]);

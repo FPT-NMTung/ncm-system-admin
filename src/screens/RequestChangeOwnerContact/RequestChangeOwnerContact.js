@@ -17,7 +17,7 @@ const RequestChangeOwnerContact = ({ title }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = title
+    document.title = title;
     FetchApi(ContactApis.requestChangeOwnerContact, undefined, undefined, [
       id,
       code,
@@ -31,17 +31,39 @@ const RequestChangeOwnerContact = ({ title }) => {
   }, []);
 
   const handlerAccept = () => {
-    setLoadingAccept(true);
-    setTimeout(() => {
-      setLoadingAccept(false);
-    }, 2000);
+    setLoadingReject(true);
+    FetchApi(
+      ContactApis.acceptRequestChangeOwnerContact,
+      undefined,
+      undefined,
+      [id, code]
+    )
+      .then(() => {
+        console.log('accept success');
+        setLoadingReject(false);
+      })
+      .catch(() => {
+        console.log('accept error');
+        setLoadingReject(false);
+      });
   };
 
   const handlerReject = () => {
     setLoadingReject(true);
-    setTimeout(() => {
-      setLoadingReject(false);
-    }, 2000);
+    FetchApi(
+      ContactApis.rejectRequestChangeOwnerContact,
+      undefined,
+      undefined,
+      [id, code]
+    )
+      .then(() => {
+        console.log('reject success');
+        setLoadingReject(false);
+      })
+      .catch(() => {
+        console.log('reject error');
+        setLoadingReject(false);
+      });
   };
 
   return (
