@@ -31,3 +31,11 @@ export const ImportUserApis = {
     contextType: 'application/json',
   }
 };
+
+export const TestApis = {
+  test: {
+    url: '/api/test-api/{0}',
+    method: 'GET',
+    contextType: 'application/json',
+  }
+}
