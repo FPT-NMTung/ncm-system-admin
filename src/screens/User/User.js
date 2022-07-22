@@ -33,7 +33,6 @@ const User = ({ title }) => {
       .append('g');
 
     function handleZoom() {
-      console.log(123);
       svg.attr(
         'transform',
         'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')'

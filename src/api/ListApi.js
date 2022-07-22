@@ -49,6 +49,11 @@ export const ImportUserApis = {
     url: '/api/admin/user-imported',
     method: 'GET',
     contextType: 'application/json',
+  },
+  excuteImport: {
+    url: '/api/admin/user-imported/{0}',
+    method: 'POST',
+    contextType: 'application/json',
   }
 };
 

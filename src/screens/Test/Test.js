@@ -12,10 +12,8 @@ const Test = ({ title }) => {
   const handleButtonClick = (id) => {
     FetchApi(TestApis.test, undefined, undefined, [id])
     .then(() => {
-      console.log('success');
     })
     .catch(() => {
-      console.log('error');
     });
   };
 
