@@ -26,8 +26,12 @@ const ImportUser = ({ title }) => {
     setStatusUpload('none');
   };
 
-  const handleSelectUser = (user) => {
-    setSelectEditUser([...user][0]);
+  const handleSelectUser = (idSelect) => {
+    const userId = [...idSelect][0];
+    const selectUser = listUser.find((user) => {
+      return user.id === Number.parseInt(userId)
+    })
+    setSelectEditUser(selectUser);
   };
 
   const loadDataUser = () => {
@@ -122,7 +126,7 @@ const ImportUser = ({ title }) => {
           </Card>
         </Grid>
         <Grid sm={5.5}>
-          <DetailUserImported userId={selectEditUser}/>
+          <DetailUserImported userData={selectEditUser}/>
         </Grid>
       </Grid.Container>
       <Modal

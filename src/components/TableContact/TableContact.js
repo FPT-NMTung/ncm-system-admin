@@ -11,7 +11,7 @@ const TableContact = ( props ) => {
       aria-label="Example table with custom cells"
       selectionMode="single"
       onSelectionChange={onSelectColumn}
-      color={'warning'}
+      color={'primary'}
       css={{
         height: 'auto',
         width: '100%',
