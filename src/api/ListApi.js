@@ -9,6 +9,16 @@ export const UserApis = {
     method: 'GET',
     contextType: 'application/json',
   },
+  listUserDeActive: {
+    url: '/api/admin/list-user-da',
+    method: 'GET',
+    contextType: 'application/json',
+  },
+  listUser: {
+    url: '/api/admin/list-email-user',
+    method: 'GET',
+    contextType: 'application/json',
+  }
 };
 
 export const ContactApis = {
@@ -17,6 +27,16 @@ export const ContactApis = {
     method: 'GET',
     contextType: 'application/json',
   },
+  listContact: {
+    url: '/api/admin/contacts/list-user-da/{0}',
+    method: 'GET',
+    contextType: 'application/json'
+  },
+  transferContact: {
+    url: '/api/contacts/transfer',
+    method: 'PATCH',
+    contextType: 'application/json'
+  }
 };
 
 export const ImportUserApis = {
@@ -29,5 +49,18 @@ export const ImportUserApis = {
     url: '/api/admin/user-imported',
     method: 'GET',
     contextType: 'application/json',
+  },
+  excuteImport: {
+    url: '/api/admin/user-imported/{0}',
+    method: 'POST',
+    contextType: 'application/json',
   }
 };
+
+export const TestApis = {
+  test: {
+    url: '/api/test-api/{0}',
+    method: 'GET',
+    contextType: 'application/json',
+  }
+}

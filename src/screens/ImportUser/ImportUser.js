@@ -7,6 +7,7 @@ import FetchApi from '../../api/FetchApi';
 import { ImportUserApis } from '../../api/ListApi';
 import { IoMdCloudDone } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
+import DetailUserImported from '../../components/DetailUserImported/DetailUserImported';
 
 import classes from './ImportUser.module.css';
 
@@ -18,26 +19,28 @@ const ImportUser = ({ title }) => {
   const [statusUpload, setStatusUpload] = useState('none');
 
   const [listUser, setListUser] = useState([]);
-  const [selectUser, setSelectUser] = useState(undefined);
+  const [selectEditUser, setSelectEditUser] = useState(undefined);
 
   const handleChangeVisibleUpload = () => {
     setShowModalUpload(!showModalUpload);
     setStatusUpload('none');
   };
 
-  const handleSelectUser = (user) => {
-    console.log(user);
-  }
+  const handleSelectUser = (idSelect) => {
+    const userId = [...idSelect][0];
+    const selectUser = listUser.find((user) => {
+      return user.id === Number.parseInt(userId)
+    })
+    setSelectEditUser(selectUser);
+  };
 
   const loadDataUser = () => {
     FetchApi(ImportUserApis.listUserImport, undefined, undefined, undefined)
-    .then((res) => {
-      setListUser(res.data);
-    })
-    .catch(() => {
-
-    })
-  }
+      .then((res) => {
+        setListUser(res.data);
+      })
+      .catch(() => {});
+  };
 
   const handleUploadFile = (e) => {
     setStatusUpload('none');
@@ -61,7 +64,7 @@ const ImportUser = ({ title }) => {
   useEffect(() => {
     document.title = title;
 
-    loadDataUser()
+    loadDataUser();
   }, []);
 
   return (
@@ -103,7 +106,20 @@ const ImportUser = ({ title }) => {
                 onClick={handleChangeVisibleUpload}
               >
                 Upload file data
-              </Button>  
+              </Button>
+              <Button
+                flat
+                auto
+                css={{ width: 200 }}
+                icon={<IoMdCloudUpload size={20} />}
+                onClick={() => {
+                  FetchApi(ImportUserApis.excuteImport, undefined, undefined, ['136']).then(() => {
+                    console.log('done');
+                  })
+                }}
+              >
+                Test
+              </Button>
             </div>
           </Card>
         </Grid>
@@ -113,15 +129,17 @@ const ImportUser = ({ title }) => {
           <Card
             css={{
               marginRight: 20,
-              minHeight: 500
+              minHeight: 500,
             }}
           >
-            {!(listUser.length === 0) && <TableContact data={listUser} onSelectColumn={handleSelectUser}/>}
-            {(listUser.length === 0) && <Loading/>}
+            {!(listUser.length === 0) && (
+              <TableContact data={listUser} onSelectColumn={handleSelectUser} />
+            )}
+            {listUser.length === 0 && <Loading />}
           </Card>
         </Grid>
         <Grid sm={5.5}>
-          <Card></Card>
+          <DetailUserImported userData={selectEditUser}/>
         </Grid>
       </Grid.Container>
       <Modal

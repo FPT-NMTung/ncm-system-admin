@@ -3,13 +3,15 @@ import { Table } from '@nextui-org/react';
 
 import classes from './TableContact.module.css';
 
-const TableContact = ({ data, onSelectColumn }) => {
+const TableContact = ( props ) => {
+  const {data, onSelectColumn} = props
+
   return (
     <Table
       aria-label="Example table with custom cells"
       selectionMode="single"
       onSelectionChange={onSelectColumn}
-      color={'warning'}
+      color={'primary'}
       css={{
         height: 'auto',
         width: '100%',
@@ -23,9 +25,9 @@ const TableContact = ({ data, onSelectColumn }) => {
         <Table.Column>Email manager</Table.Column>
       </Table.Header>
       <Table.Body>
-        {data.map((item, index) => {
+        {data.map((item) => {
           return (
-            <Table.Row key={index}>
+            <Table.Row key={item.id}>
               <Table.Cell>{item.id}</Table.Cell>
               <Table.Cell>{item.name}</Table.Cell>
               <Table.Cell>{item.email}</Table.Cell>

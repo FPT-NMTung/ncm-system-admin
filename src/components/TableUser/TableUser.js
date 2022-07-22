@@ -33,7 +33,6 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
   ];
 
   const rows = dataUser.children;
-  console.log(dataUser);
   return (
     <div className={classes.main}>
       <Card
@@ -120,7 +119,6 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
               color={'warning'}
               align="start"
               rowsPerPage={10}
-              onPageChange={(page) => console.log({ page })}
             />
             <Table.Header columns={columns}>
               {(column) => (

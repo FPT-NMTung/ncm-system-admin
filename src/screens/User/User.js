@@ -33,7 +33,6 @@ const User = ({ title }) => {
       .append('g');
 
     function handleZoom() {
-      console.log(123);
       svg.attr(
         'transform',
         'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')'
@@ -114,9 +113,9 @@ const User = ({ title }) => {
       .append('circle')
       .attr('r', 8)
       .attr('fill', function (d) {
-        return d.children ? '#ffffff' : '#707070';
+        return d.isActive ? '#06d139' : '#d12406';
       })
-      .attr('stroke', '#ffffff')
+      .attr('stroke', '#6b6b6b')
       .attr('stroke-width', '2px')
       .attr('cursor', 'pointer')
       .attr('title', function (d) {

@@ -26,8 +26,6 @@ const FetchApi = async (api, bodyObject, params, pathValiable) => {
     delete options.headers['Content-Type'];
   }
 
-  console.log(options);
-
   let paramString = '?';
   for (const property in params) {
     if (params.hasOwnProperty(property)) {
@@ -35,13 +33,14 @@ const FetchApi = async (api, bodyObject, params, pathValiable) => {
     }
   }
 
+  let newUrl = api.url
   if (pathValiable != undefined && pathValiable.length > 0) {
     pathValiable.forEach((element, index) => {
-      api.url = api.url.replace(`{${index}}`, element);
+      newUrl = newUrl.replace(`{${index}}`, element);
     });
   }
 
-  let response = await fetch(`${endpoint}${api.url}${paramString}`, options);
+  let response = await fetch(`${endpoint}${newUrl}${paramString}`, options);
 
   if (response.status === 401) {
     const dataRefresh = await refreshToken();
@@ -57,7 +56,7 @@ const FetchApi = async (api, bodyObject, params, pathValiable) => {
         },
         body: bodyObject ? JSON.stringify(bodyObject) : null,
       };
-      response = await fetch(`${endpoint}${api.url}${paramString}`, optionsR);
+      response = await fetch(`${endpoint}${newUrl}${paramString}`, optionsR);
     }
   }
 
