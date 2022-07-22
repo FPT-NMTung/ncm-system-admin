@@ -44,7 +44,7 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
           <h3 className={classes.titleManage}>Manager information:</h3>
 
           <Table
-            color={'warning'}
+            color={'primary'}
             selectionMode="none"
             shadow={false}
             containerCss={{
@@ -107,7 +107,7 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
         {rows && (
           <Table
             aria-label="Example dynamic collection table with color selection"
-            color={'warning'}
+            color={'primary'}
             selectionMode="none"
             shadow={false}
             containerCss={{
@@ -116,7 +116,7 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
             }}
           >
             <Table.Pagination
-              color={'warning'}
+              color={'primary'}
               align="start"
               rowsPerPage={10}
             />

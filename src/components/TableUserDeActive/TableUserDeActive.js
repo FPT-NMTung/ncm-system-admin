@@ -5,7 +5,7 @@ const TableUserDeActive = ({ listUser, onSelectColumn }) => {
     return (
         <Table
             aria-label="Example table with custom cells"
-            color={'warning'}
+            color={'primary'}
             css={{
                 height: 'auto',
                 width: '100%',

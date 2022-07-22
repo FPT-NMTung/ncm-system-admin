@@ -72,19 +72,22 @@ const Contact = ({ title }) => {
   }
 
   const onSelectColumnUser = (key) => {
+    console.log([...key][0])
     setLoadingContact(true);
-    setSelectUser(key)
-    loadListContact(key);
+    setSelectUser([...key][0])
+    loadListContact([...key][0]);
   }
 
-  const loadListContact = (key) => {
-    FetchApi(ContactApis.listContact, undefined, undefined, [key.currentKey])
+  const loadListContact = (id) => {
+    console.log(id)
+    FetchApi(ContactApis.listContact, undefined, undefined, [id])
       .then((res) => {
         setListContact(res.data);
         setLoadingContact(false);
       })
       .catch(() => {
-
+        setListContact([]);
+        setLoadingContact(false);
       });
   }
 
@@ -162,7 +165,7 @@ const Contact = ({ title }) => {
             <Card>
               <Text h3 css={{ margin: 20 }}>List de-activation</Text>
               {listUserDeActive.length !== 0 && <TableUserDeActive listUser={listUserDeActive} onSelectColumn={onSelectColumnUser} />}
-              {loadingUser && !listUser.length && <div className={classes.loadingContact}><Loading color='warning' /></div>}
+              {loadingUser && !listUser.length && <div className={classes.loadingContact}><Loading color='primary' /></div>}
               {!listUserDeActive.length && !loadingUser && <div className={classes.loadingUser}><Text h4 size={16} color="#BDBDBD">Empty</Text></div>}
             </Card>
           </div>
@@ -171,7 +174,7 @@ const Contact = ({ title }) => {
           <Card>
             <Text h3 css={{ margin: 20 }}>List contact</Text>
             {listContact.length !== 0 && <TableContactDeActive listContact={listContact} onSelectColumn={onSelectColumnContact} />}
-            {loadingContact && !listContact.length && <div className={classes.loadingContact}><Loading color='warning' /></div>}
+            {loadingContact && !listContact.length && <div className={classes.loadingContact}><Loading color='primary' /></div>}
             {!listContact.length && !loadingContact && <div className={classes.loadingContact}><Text h4 size={16} color="#BDBDBD">Empty</Text></div>}
           </Card>
           {listContact.length !== 0 && <Card
