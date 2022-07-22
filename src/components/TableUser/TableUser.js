@@ -68,7 +68,7 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
                     : dataUser.role_id === 2
                     ? 'Manager'
                     : dataUser.role_id === 3
-                    ? 'Marketer'
+                    ? 'Sale Director'
                     : ''}
                 </Table.Cell>
                 <Table.Cell>
@@ -137,7 +137,7 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
                       : item.role_id === 2
                       ? 'Manager'
                       : item.role_id === 3
-                      ? 'Marketer'
+                      ? 'Sale Director'
                       : ''}
                   </Table.Cell>
                   <Table.Cell>

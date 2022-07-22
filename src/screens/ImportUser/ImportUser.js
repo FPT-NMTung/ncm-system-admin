@@ -29,8 +29,8 @@ const ImportUser = ({ title }) => {
   const handleSelectUser = (idSelect) => {
     const userId = [...idSelect][0];
     const selectUser = listUser.find((user) => {
-      return user.id === Number.parseInt(userId)
-    })
+      return user.id === Number.parseInt(userId);
+    });
     setSelectEditUser(selectUser);
   };
 
@@ -59,6 +59,50 @@ const ImportUser = ({ title }) => {
         setStatusUpload('error');
         setUploading(false);
       });
+  };
+
+  const executeImport = async () => {
+    for (let index = 0; index < listUser.length; index++) {
+      const user = listUser[index];
+
+      if (user.status !== 2) {
+        await FetchApi(ImportUserApis.executeImport, undefined, undefined, [
+          `${user.id}`,
+        ])
+          .then(() => {
+            user.status = 2;
+          })
+          .catch(() => {
+            user.status = 3;
+          });
+        setListUser([...listUser]);
+        if (user.status === 3) {
+          const t = listUser.map((e) => {
+            if (e.status === 4) {
+              e.status = 1
+            }
+            return e;
+          })
+          setListUser([...t]);
+          break;
+        };
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log(listUser);
+  }, [listUser]);
+
+  const handleExecuteImport = () => {
+    let newList = listUser.map((user) => {
+      if (user.status !== 2) {
+        user.status = 4;
+      }
+      return user;
+    });
+    setListUser(newList);
+    executeImport();
   };
 
   useEffect(() => {
@@ -110,15 +154,12 @@ const ImportUser = ({ title }) => {
               <Button
                 flat
                 auto
-                css={{ width: 200 }}
+                color={'success'}
+                css={{ width: 130 }}
                 icon={<IoMdCloudUpload size={20} />}
-                onClick={() => {
-                  FetchApi(ImportUserApis.excuteImport, undefined, undefined, ['136']).then(() => {
-                    console.log('done');
-                  })
-                }}
+                onClick={handleExecuteImport}
               >
-                Test
+                Execute import
               </Button>
             </div>
           </Card>
@@ -139,7 +180,7 @@ const ImportUser = ({ title }) => {
           </Card>
         </Grid>
         <Grid sm={5.5}>
-          <DetailUserImported userData={selectEditUser}/>
+          <DetailUserImported userData={selectEditUser} />
         </Grid>
       </Grid.Container>
       <Modal

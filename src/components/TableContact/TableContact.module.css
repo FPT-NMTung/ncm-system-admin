@@ -2,3 +2,10 @@
     color: rgb(202, 202, 202);
     font-style: italic;
 }
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}

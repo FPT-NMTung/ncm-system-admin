@@ -27,6 +27,16 @@ export const ContactApis = {
     method: 'GET',
     contextType: 'application/json',
   },
+  acceptRequestChangeOwnerContact: {
+    url: '/api/contacts/request/{0}/{1}',
+    method: 'PATCH',
+    contextType: 'application/json',
+  },
+  rejectRequestChangeOwnerContact: {
+    url: '/api/contacts/request/cancel/{0}/{1}',
+    method: 'PATCH',
+    contextType: 'application/json',
+  },
   listContact: {
     url: '/api/admin/contacts/list-user-da/{0}',
     method: 'GET',
@@ -36,7 +46,7 @@ export const ContactApis = {
     url: '/api/contacts/transfer',
     method: 'PATCH',
     contextType: 'application/json'
-  }
+  },
 };
 
 export const ImportUserApis = {
@@ -50,7 +60,7 @@ export const ImportUserApis = {
     method: 'GET',
     contextType: 'application/json',
   },
-  excuteImport: {
+  executeImport: {
     url: '/api/admin/user-imported/{0}',
     method: 'POST',
     contextType: 'application/json',
