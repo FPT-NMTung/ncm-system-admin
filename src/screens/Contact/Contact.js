@@ -15,11 +15,12 @@ const Contact = ({ title }) => {
   const [loadingContact, setLoadingContact] = useState(false);
   const [listSelectContact, setListSelectContact] = useState([]);
   const [listUser, setListUser] = useState([]);
-  const [email, setEmail] = useState('aaa');
+  const [email, setEmail] = useState('');
   const [alertEmail, setAlertEmail] = useState(false);
   const [alertContact, setAlertContact] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [selectUser, setSelectUser] = useState('');
+  const [disabledTransfer, setDisabledTransfer] = useState(false);
 
   useEffect(() => {
     document.title = title;
@@ -29,7 +30,7 @@ const Contact = ({ title }) => {
   }, []);
 
   useEffect(() => {
-    if(alertEmail){
+    if (alertEmail) {
       setTimeout(() => {
         setAlertEmail(false);
       }, 2000);
@@ -37,7 +38,7 @@ const Contact = ({ title }) => {
   }, [alertEmail])
 
   useEffect(() => {
-    if(alertContact){
+    if (alertContact) {
       setTimeout(() => {
         setAlertContact(false);
       }, 2000);
@@ -72,14 +73,12 @@ const Contact = ({ title }) => {
   }
 
   const onSelectColumnUser = (key) => {
-    console.log([...key][0])
     setLoadingContact(true);
     setSelectUser([...key][0])
     loadListContact([...key][0]);
   }
 
   const loadListContact = (id) => {
-    console.log(id)
     FetchApi(ContactApis.listContact, undefined, undefined, [id])
       .then((res) => {
         setListContact(res.data);
@@ -116,25 +115,30 @@ const Contact = ({ title }) => {
       setAlertEmail(true);
     }
     if (listSelectContact.length !== 0 && email !== '') {
+      setDisabledTransfer(true);
       let body = {
         contact_id: listSelectContact,
         email: email
       }
-      FetchApi(ContactApis.transferContact, body, undefined, undefined)
-        .then((res) => {
-          console.log(res);
-          if(res.message === 'Success'){
-            setAlertSuccess(true);
-            setListSelectContact([]);
-            setEmail('');
-            loadListContact(selectUser);
-          }
-        })
-        .catch(() => {
-        });
+      transferContact(body);
     }
   }
-  
+
+  const transferContact = (body) => {
+    FetchApi(ContactApis.transferContact, body, undefined, undefined)
+      .then((res) => {
+        if (res.message === 'Success') {
+          setAlertSuccess(true);
+          setListSelectContact([]);
+          setEmail('');
+          setDisabledTransfer(false);
+          loadListContact(selectUser);
+        }
+      })
+      .catch(() => {
+      });
+  }
+
   const onCloseContact = () => {
     setAlertContact(false);
   }
@@ -185,31 +189,35 @@ const Contact = ({ title }) => {
             }}
           >
             <div className={classes.footerTabbleContact}>
-              <AutoCompleteCustom
-                listUser={listUser}
-                style={{ width: 300 }}
-                placeholder={'Input Email'}
-                onSelect={onSelect}
-                allowClear={true}
-                notFoundContent={'Not found'}
-                onClear={onClear}
-                status={email ? undefined : 'error'}
-                onChange={onChange}
-              />
-              <Button size={'sm'} onPress={handleTransfer}>Transfer</Button>
+              <div className={classes.formInput}>
+                <Text h4 css={{ margin: 0, marginRight: 10 }}>Email transfer: </Text>
+                <AutoCompleteCustom
+                  listUser={listUser}
+                  style={{ width: 300 }}
+                  placeholder={'Input Email'}
+                  onSelect={onSelect}
+                  allowClear={true}
+                  notFoundContent={'Not found'}
+                  onClear={onClear}
+                  value={email}
+                  status={alertEmail ? 'error' : undefined}
+                  onChange={onChange}
+                />
+              </div>
+              <Button size={'sm'} onPress={handleTransfer} disabled={disabledTransfer}>Transfer</Button>
             </div>
           </Card>}
         </Grid.Container>
       </Grid.Container>
       <div className={classes.alert}>
         {alertContact &&
-          <AlertCustom message={'Please select at least one contact'} type={'warning'} onClose={onCloseContact}/>
+          <AlertCustom message={'Please select at least one contact'} type={'warning'} onClose={onCloseContact} />
         }
         {alertEmail &&
-          <AlertCustom message={'Please enter transfer email'} type={'warning'} onClose={onCloseEmail}/>
+          <AlertCustom message={'Please enter transfer email'} type={'warning'} onClose={onCloseEmail} />
         }
         {alertSuccess &&
-          <AlertCustom message={'Transfer contact successfully'} type={'success'} onClose={onCloseSuccess}/>
+          <AlertCustom message={'Transfer contact successfully'} type={'success'} onClose={onCloseSuccess} />
         }
       </div>
     </div>

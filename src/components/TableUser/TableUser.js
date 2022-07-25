@@ -167,7 +167,7 @@ const TableUser = ({ dataUser, onButtonReloadClick }) => {
         )}
         {!rows && (
           <div className={classes.loading}>
-            <Loading color={'warning'} />
+            <Loading color={'primary'} />
           </div>
         )}
       </Card>

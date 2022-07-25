@@ -13,6 +13,7 @@ const AutoCompleteCustom = (props) => {
             filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
             }
+            value={props.value}
             onSelect={props.onSelect}
             onClear={props.onClear}           
             status={props.status}
