@@ -103,11 +103,11 @@ const Contact = ({ title }) => {
   }
 
   const onChange = (value) => {
-    console.log(value);
     setEmail('')
   }
 
   const handleTransfer = () => {
+
     if (!listSelectContact.length) {
       setAlertContact(true);
     }
@@ -116,9 +116,11 @@ const Contact = ({ title }) => {
     }
     if (listSelectContact.length !== 0 && email !== '') {
       setDisabledTransfer(true);
+      let from = listUserDeActive.find((item) => item.id == selectUser).email
       let body = {
+        from: from,
         contact_id: listSelectContact,
-        email: email
+        to: email
       }
       transferContact(body);
     }
@@ -189,22 +191,19 @@ const Contact = ({ title }) => {
             }}
           >
             <div className={classes.footerTabbleContact}>
-              <div className={classes.formInput}>
-                <Text h4 css={{ margin: 0, marginRight: 10 }}>Email transfer: </Text>
-                <AutoCompleteCustom
-                  listUser={listUser}
-                  style={{ width: 300 }}
-                  placeholder={'Input Email'}
-                  onSelect={onSelect}
-                  allowClear={true}
-                  notFoundContent={'Not found'}
-                  onClear={onClear}
-                  value={email}
-                  status={alertEmail ? 'error' : undefined}
-                  onChange={onChange}
-                />
-              </div>
-              <Button size={'sm'} onPress={handleTransfer} disabled={disabledTransfer}>Transfer</Button>
+              <AutoCompleteCustom
+                listUser={listUser}
+                style={{ width: 300 }}
+                placeholder={'Input Email'}
+                onSelect={onSelect}
+                allowClear={true}
+                notFoundContent={'Not found'}
+                value={email}
+                onClear={onClear}
+                status={alertEmail ? 'error' : undefined}
+                onChange={onChange}
+              />
+              <Button size={'sm'} onPress={handleTransfer}>Transfer</Button>
             </div>
           </Card>}
         </Grid.Container>

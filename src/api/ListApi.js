@@ -43,7 +43,7 @@ export const ContactApis = {
     contextType: 'application/json'
   },
   transferContact: {
-    url: '/api/contacts/transfer',
+    url: '/api/admin/transfer',
     method: 'PATCH',
     contextType: 'application/json'
   },

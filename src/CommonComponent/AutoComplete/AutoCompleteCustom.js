@@ -8,12 +8,12 @@ const AutoCompleteCustom = (props) => {
             allowClear={props.allowClear}
             backfill
             notFoundContent={props.notFoundContent}
+            value={props.value}
             options={props.listUser}
             placeholder={props.placeholder}
             filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
             }
-            value={props.value}
             onSelect={props.onSelect}
             onClear={props.onClear}           
             status={props.status}
