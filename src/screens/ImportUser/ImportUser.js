@@ -61,6 +61,22 @@ const ImportUser = ({ title }) => {
       });
   };
 
+  const handleChangeUserSuccess = (userId, data) => {
+    const user = listUser.find((user) => {
+      return user.id === userId;
+    })
+
+    if (user) {
+      user.name = data.name;
+      user.email = data.email;
+      user.role_id = data.role_id;
+      user.manager = data.role_id === 3 ? null : data.manager_email;
+
+      console.log(listUser);
+      setListUser([...listUser]);
+    }
+  }
+
   const executeImport = async () => {
     for (let index = 0; index < listUser.length; index++) {
       const user = listUser[index];
@@ -180,7 +196,7 @@ const ImportUser = ({ title }) => {
           </Card>
         </Grid>
         <Grid sm={5.5}>
-          <DetailUserImported userData={selectEditUser} />
+          <DetailUserImported list={listUser} userData={selectEditUser} onChangeSuccess={handleChangeUserSuccess}/>
         </Grid>
       </Grid.Container>
       <Modal

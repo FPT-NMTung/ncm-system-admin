@@ -40,6 +40,7 @@ const User = ({ title }) => {
     }
 
     let zoom = d3.behavior.zoom().scaleExtent([0.1, 5]).on('zoom', handleZoom);
+    zoom.scale(0.5);
 
     function centerNode(source, userId) {
       const target = source.find((e) => {
@@ -145,6 +146,10 @@ const User = ({ title }) => {
       })
       .attr('y', function (d) {
         return d.x + 3.5;
+      })
+      .on('click', function (d) {
+        centerNode(nodes, d.id);
+        handleClickUserGraph(d);
       });
 
     node
@@ -161,6 +166,10 @@ const User = ({ title }) => {
       })
       .attr('y', function (d) {
         return d.x + 15.5;
+      })
+      .on('click', function (d) {
+        centerNode(nodes, d.id);
+        handleClickUserGraph(d);
       });
 
     node
@@ -176,6 +185,10 @@ const User = ({ title }) => {
       })
       .attr('y', function (d) {
         return d.x - 8;
+      })
+      .on('click', function (d) {
+        centerNode(nodes, d.id);
+        handleClickUserGraph(d);
       });
 
     centerNode(nodes);

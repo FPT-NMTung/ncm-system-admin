@@ -64,6 +64,16 @@ export const ImportUserApis = {
     url: '/api/admin/user-imported/{0}',
     method: 'POST',
     contextType: 'application/json',
+  },  
+  listEmailUserActive: {
+    url: '/api/admin/list-email-manager',
+    method: 'GET',
+    contextType: 'application/json',
+  },
+  updateUser: {
+    url: '/api/admin/user-imported/{0}',
+    method: 'PUT',
+    contextType: 'application/json',
   }
 };
 

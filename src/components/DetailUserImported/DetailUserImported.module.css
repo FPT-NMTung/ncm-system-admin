@@ -28,3 +28,10 @@
     font-weight: bolder;
     color      : #093ce2;
 }
+
+.textManage {
+    line-height  : 21px;
+    margin       : 0;
+    margin-bottom: 6px;
+    padding-left : 3px;
+}
