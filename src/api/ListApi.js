@@ -14,7 +14,7 @@ export const UserApis = {
     method: 'GET',
     contextType: 'application/json',
   },
-  listUser: {
+  listEmailUser: {
     url: '/api/admin/list-email-user',
     method: 'GET',
     contextType: 'application/json',
