@@ -20,7 +20,7 @@ const Contact = ({ title }) => {
   const [alertContact, setAlertContact] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [selectUser, setSelectUser] = useState('');
-  const [disabledTransfer, setDisabledTransfer] = useState(false);
+  const [disabledTransfer, setDisabledTransfer] = useState(true);
 
   useEffect(() => {
     document.title = title;
@@ -97,6 +97,12 @@ const Contact = ({ title }) => {
   }
 
   const onSelectColumnContact = (key) => {
+    if(![...key].length){
+      setDisabledTransfer(true);
+    }
+    if([...key].length){
+      setDisabledTransfer(false);
+    }
     setListSelectContact([...key])
   }
 
@@ -118,7 +124,7 @@ const Contact = ({ title }) => {
     }
     if (listSelectContact.length !== 0 && email !== '') {
       setDisabledTransfer(true);
-      let from = listUserDeActive.find((item) => item.id == selectUser).email
+      let from = listUserDeActive.find((item) => item.id === selectUser).email
       let body = {
         from: from,
         contact_id: listSelectContact,
@@ -206,7 +212,7 @@ const Contact = ({ title }) => {
                   onChange={onChange}
                 />
               </div>
-              <Button size={'sm'} onPress={handleTransfer} disabled={listSelectContact.length ? false : true}>Transfer</Button>
+              <Button size={'sm'} onPress={handleTransfer} disabled={disabledTransfer}>Transfer</Button>
             </div>
           </Card>}
         </Grid.Container>
