@@ -1,43 +1,138 @@
-import { Card, Button, Input, Spacer } from '@nextui-org/react';
-import { useEffect, useRef } from 'react';
+import { Card, Button, Input, Spacer, Loading } from '@nextui-org/react';
+import { useEffect, useState, useRef, Fragment } from 'react';
 import { FaUserEdit } from 'react-icons/fa';
+import { Select } from 'antd';
 import classes from './DetailUserImported.module.css';
+import FetchApi from '../../api/FetchApi';
+import { ImportUserApis } from '../../api/ListApi';
 
-const DetailUserImported = ({ userData }) => {
+const listRole = [
+  {
+    id: 1,
+    value: 'Staff',
+  },
+  {
+    id: 2,
+    value: 'Manager',
+  },
+  {
+    id: 3,
+    value: 'Sale director',
+  },
+];
+
+const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
+  const [listEmail, setListEmail] = useState([]);
+  const [selectRole, setSelectRole] = useState(undefined);
+  const [selectManager, setSelectManager] = useState(undefined);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState('none');
 
   const refName = useRef();
   const refEmail = useRef();
-  const refRole = useRef();
-  const refManager = useRef();
 
   const handleNameChange = (e) => {
-    refName.current.value = e.target.value.trim();
+    refName.current.value = e.target.value;
   };
   const handleEmailChange = (e) => {
-    refEmail.current.value = e.target.value.trim();
-  };
-  const handleRoleChange = (e) => {
-    refRole.current.value = e.target.value.trim();
-  };
-  const handleManagerChange = (e) => {
-    refManager.current.value = e.target.value.trim();
+    refEmail.current.value = e.target.value;
   };
 
   useEffect(() => {
     if (userData) {
-      refName.current.value = userData.name;
-      refEmail.current.value = userData.email;
-      refRole.current.value =
-        userData.role_id === 1
-          ? 'Staff'
-          : userData.role_id === 2
-          ? 'Manager'
-          : userData.role_id === 3
-          ? 'Sale Director'
-          : 'Admin';
-      refManager.current.value = userData.manager;
+      refName.current.value = userData.name.trim();
+      refEmail.current.value = userData.email.trim();
+
+      const listEmailUserImportBefore = list.filter((item) => {
+        return item.id < userData.id;
+      }).map((item) => {
+        return item.email;
+      })
+
+      FetchApi(
+        ImportUserApis.listEmailUserActive,
+        undefined,
+        undefined,
+        undefined
+      )
+        .then((res) => {
+          const data = res.data.map((item) => {
+            return item.email;
+          });
+          setListEmail([...data, ...listEmailUserImportBefore]);
+          setSelectRole(userData.role_id);
+          setSelectManager(userData.manager);
+        })
+        .catch(() => {
+          console.log('error');
+        });
     }
   }, [userData]);
+
+  const handleChangeRole = (e) => {
+    setSelectRole(e);
+  };
+
+  const handleChangeManager = (e) => {
+    setSelectManager(e);
+  };
+
+  const handleSubmitForm = () => {
+    const name = refName.current.value;
+    const email = refEmail.current.value;
+    const role = selectRole;
+    const manager = selectManager;
+
+    console.log(manager);
+
+    if (
+      name === undefined ||
+      email === undefined ||
+      name.trim() === '' ||
+      email.trim() === ''
+    ) {
+      return;
+    }
+
+    const data = {
+      name: name,
+      email: email,
+      role_id: role,
+    };
+
+    if (role !== 3 && manager === null) {
+      return;
+    }
+
+    if (role !== 3 && manager !== null && manager.trim() === '') {
+      return;
+    }
+
+    if (role !== 3) {
+      data.manager_email = manager;
+    }
+
+    setLoading(true);
+    setStatus('none');
+
+    FetchApi(ImportUserApis.updateUser, data, undefined, [`${userData.id}`])
+      .then(() => {
+        onChangeSuccess(userData.id, data);
+        resetStatus('success');
+      })
+      .catch(() => {
+        resetStatus('fail');
+      });
+  };
+
+  const resetStatus = (status) => {
+    setLoading(false);
+    setStatus(status);
+
+    setTimeout(() => {
+      setStatus('none');
+    }, 1500);
+  };
 
   return (
     <Card>
@@ -56,6 +151,7 @@ const DetailUserImported = ({ userData }) => {
           </h3>
           <div className={classes.form}>
             <Input
+              readOnly={userData.status === 2}
               css={{ width: 400 }}
               ref={refName}
               onChange={handleNameChange}
@@ -63,27 +159,91 @@ const DetailUserImported = ({ userData }) => {
             />
             <Spacer y={0.5} />
             <Input
+              readOnly={userData.status === 2}
               css={{ width: 400 }}
               ref={refEmail}
               onChange={handleEmailChange}
               label="Email"
             />
             <Spacer y={0.5} />
-            <Input
-              css={{ width: 400 }}
-              ref={refRole}
-              onChange={handleRoleChange}
-              label="Role"
-            />
-            <Spacer y={0.5} />
-            <Input
-              css={{ width: 400 }}
-              ref={refManager}
-              onChange={handleManagerChange}
-              label="Manager"
-            />
+            <p className={classes.textManage}>Role</p>
+            <Select
+              defaultValue={listRole.find(
+                (item) => userData.role_id === item.id
+              )}
+              value={listRole.find((item) => selectRole === item.id)}
+              onChange={handleChangeRole}
+              showSearch
+              style={{
+                width: 400,
+              }}
+              placeholder="Search role"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              {listRole.map((item) => (
+                <Select.Option key={item.id} value={item.id}>
+                  {item.value}
+                </Select.Option>
+              ))}
+            </Select>
+            {selectRole !== 3 && (
+              <Fragment>
+                <Spacer y={0.5} />
+                <p className={classes.textManage}>Manager's email</p>
+                <Select
+                  defaultValue={selectManager}
+                  value={selectManager}
+                  onChange={handleChangeManager}
+                  showSearch
+                  style={{
+                    width: 400,
+                  }}
+                  placeholder="Search email"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.children.toLowerCase().includes(input.toLowerCase())
+                  }
+                  filterSort={(optionA, optionB) =>
+                    optionA.children
+                      .toLowerCase()
+                      .localeCompare(optionB.children.toLowerCase())
+                  }
+                >
+                  {listEmail.map((email) => (
+                    <Select.Option key={email} value={email}>
+                      {email}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Fragment>
+            )}
             <Spacer y={1.5} />
-            <Button disabled={userData.status === 2} auto>Save</Button>
+            <Button
+              onClick={handleSubmitForm}
+              disabled={userData.status === 2 || loading}
+              css={{ width: 100 }}
+              color={
+                status === 'none'
+                  ? 'primary'
+                  : status === 'success'
+                  ? 'success'
+                  : 'error'
+              }
+              auto
+            >
+              {!loading && status === 'none' && 'Save'}
+              {!loading && status === 'success' && 'Success'}
+              {!loading && status === 'fail' && 'Failed'}
+              {loading && <Loading size="xs" />}
+            </Button>
           </div>
         </div>
       )}

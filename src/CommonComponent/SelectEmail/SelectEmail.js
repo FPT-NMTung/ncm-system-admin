@@ -1,25 +1,24 @@
 import React from 'react';
-import { AutoComplete } from 'antd';
+import { Select } from 'antd';
 
-const AutoCompleteCustom = (props) => {
+const SelectEmail = (props) => {
     return (
-        <AutoComplete
+        <Select
             style={props.style}
-            allowClear={props.allowClear}
-            backfill
+            showSearch
             notFoundContent={props.notFoundContent}
             value={props.value}
-            options={props.listUser}
+            options={props.listItem}
             placeholder={props.placeholder}
             filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
             }
             onSelect={props.onSelect}
-            onClear={props.onClear}           
+            onChange={props.onChange}       
             status={props.status}
             disabled={props.disabled}
         />
     );
 };
 
-export default AutoCompleteCustom;
+export default SelectEmail;

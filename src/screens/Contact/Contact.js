@@ -5,29 +5,29 @@ import TableUserDeActive from '../../components/TableUserDeActive/TableUserDeAct
 import FetchApi from '../../api/FetchApi';
 import { ContactApis, UserApis } from '../../api/ListApi';
 import TableContactDeActive from '../../components/TableContactDeActive/TableContactDeActive';
-import AutoCompleteCustom from '../../CommonComponent/AutoComplete/AutoCompleteCustom';
+import SelectEmail from '../../CommonComponent/SelectEmail/SelectEmail';
 import AlertCustom from '../../CommonComponent/AlertCustom/AlertCustom';
 
 const Contact = ({ title }) => {
+  document.title = title;
   const [listUserDeActive, setListUserDeActive] = useState([]);
   const [listContact, setListContact] = useState([]);
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingContact, setLoadingContact] = useState(false);
   const [listSelectContact, setListSelectContact] = useState([]);
-  const [listUser, setListUser] = useState([]);
-  const [email, setEmail] = useState('');
+  const [listEmailUser, setListEmailUser] = useState([]);
+  const [email, setEmail] = useState();
   const [alertEmail, setAlertEmail] = useState(false);
   const [alertContact, setAlertContact] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [selectUser, setSelectUser] = useState('');
-  const [disabledTransfer, setDisabledTransfer] = useState(false);
+  const [disabledTransfer, setDisabledTransfer] = useState(true);
 
   useEffect(() => {
-    document.title = title;
     setLoadingUser(true);
     loadListUserDeActive()
-    loadListUser();
-  }, []);
+    loadListEmailUser();
+  }, [])
 
   useEffect(() => {
     if (alertEmail) {
@@ -56,16 +56,16 @@ const Contact = ({ title }) => {
       });
   }
 
-  const loadListUser = () => {
-    FetchApi(UserApis.listUser, undefined, undefined, undefined)
+  const loadListEmailUser = () => {
+    FetchApi(UserApis.listEmailUser, undefined, undefined, undefined)
       .then((res) => {
         let listTemp = []
-        res.data.map((item) => {
+        res.data.forEach((item) => {
           listTemp.push({
             value: item.email,
           })
         })
-        setListUser(listTemp)
+        setListEmailUser(listTemp)
       })
       .catch(() => {
 
@@ -75,7 +75,14 @@ const Contact = ({ title }) => {
   const onSelectColumnUser = (key) => {
     setLoadingContact(true);
     setSelectUser([...key][0])
-    loadListContact([...key][0]);
+    if ([...key][0]) {
+      loadListContact([...key][0]);
+    }
+    if (![...key][0]) {
+      setListContact([]);
+      setLoadingContact(false);
+    }
+
   }
 
   const loadListContact = (id) => {
@@ -85,12 +92,17 @@ const Contact = ({ title }) => {
         setLoadingContact(false);
       })
       .catch(() => {
-        setListContact([]);
-        setLoadingContact(false);
+
       });
   }
 
   const onSelectColumnContact = (key) => {
+    if(![...key].length){
+      setDisabledTransfer(true);
+    }
+    if([...key].length){
+      setDisabledTransfer(false);
+    }
     setListSelectContact([...key])
   }
 
@@ -98,12 +110,8 @@ const Contact = ({ title }) => {
     setEmail(value);
   }
 
-  const onClear = () => {
-    setEmail('');
-  }
-
   const onChange = (value) => {
-    setEmail('')
+    setEmail(value);
   }
 
   const handleTransfer = () => {
@@ -116,7 +124,7 @@ const Contact = ({ title }) => {
     }
     if (listSelectContact.length !== 0 && email !== '') {
       setDisabledTransfer(true);
-      let from = listUserDeActive.find((item) => item.id == selectUser).email
+      let from = listUserDeActive.find((item) => item.id === selectUser).email
       let body = {
         from: from,
         contact_id: listSelectContact,
@@ -171,7 +179,7 @@ const Contact = ({ title }) => {
             <Card>
               <Text h3 css={{ margin: 20 }}>List de-activation</Text>
               {listUserDeActive.length !== 0 && <TableUserDeActive listUser={listUserDeActive} onSelectColumn={onSelectColumnUser} />}
-              {loadingUser && !listUser.length && <div className={classes.loadingContact}><Loading color='primary' /></div>}
+              {loadingUser && !listEmailUser.length && <div className={classes.loadingContact}><Loading color='primary' /></div>}
               {!listUserDeActive.length && !loadingUser && <div className={classes.loadingUser}><Text h4 size={16} color="#BDBDBD">Empty</Text></div>}
             </Card>
           </div>
@@ -191,19 +199,20 @@ const Contact = ({ title }) => {
             }}
           >
             <div className={classes.footerTabbleContact}>
-              <AutoCompleteCustom
-                listUser={listUser}
-                style={{ width: 300 }}
-                placeholder={'Input Email'}
-                onSelect={onSelect}
-                allowClear={true}
-                notFoundContent={'Not found'}
-                value={email}
-                onClear={onClear}
-                status={alertEmail ? 'error' : undefined}
-                onChange={onChange}
-              />
-              <Button size={'sm'} onPress={handleTransfer}>Transfer</Button>
+              <div className={classes.formInput}>
+                <Text h3 css={{ marginRight: 20 }}>Email transfer</Text>
+                <SelectEmail
+                  listItem={listEmailUser}
+                  style={{ width: 300 }}
+                  placeholder={'Input Email'}
+                  onSelect={onSelect}
+                  notFoundContent={'Not found'}
+                  value={email}
+                  status={alertEmail ? 'error' : undefined}
+                  onChange={onChange}
+                />
+              </div>
+              <Button size={'sm'} onPress={handleTransfer} disabled={disabledTransfer}>Transfer</Button>
             </div>
           </Card>}
         </Grid.Container>
