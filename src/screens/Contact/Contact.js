@@ -9,6 +9,7 @@ import SelectEmail from '../../CommonComponent/SelectEmail/SelectEmail';
 import AlertCustom from '../../CommonComponent/AlertCustom/AlertCustom';
 
 const Contact = ({ title }) => {
+  document.title = title;
   const [listUserDeActive, setListUserDeActive] = useState([]);
   const [listContact, setListContact] = useState([]);
   const [loadingUser, setLoadingUser] = useState(false);
@@ -23,11 +24,10 @@ const Contact = ({ title }) => {
   const [disabledTransfer, setDisabledTransfer] = useState(true);
 
   useEffect(() => {
-    document.title = title;
     setLoadingUser(true);
     loadListUserDeActive()
     loadListEmailUser();
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (alertEmail) {
@@ -60,7 +60,7 @@ const Contact = ({ title }) => {
     FetchApi(UserApis.listEmailUser, undefined, undefined, undefined)
       .then((res) => {
         let listTemp = []
-        res.data.map((item) => {
+        res.data.forEach((item) => {
           listTemp.push({
             value: item.email,
           })

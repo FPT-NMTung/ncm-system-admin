@@ -1,5 +1,5 @@
 import React from 'react';
-import { AutoComplete, Select } from 'antd';
+import { Select } from 'antd';
 
 const SelectEmail = (props) => {
     return (
