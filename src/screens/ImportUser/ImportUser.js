@@ -11,7 +11,6 @@ import { TiWarning } from 'react-icons/ti';
 import DetailUserImported from '../../components/DetailUserImported/DetailUserImported';
 
 import classes from './ImportUser.module.css';
-import AlertCustom from '../../CommonComponent/AlertCustom/AlertCustom';
 
 const { Dragger } = Upload;
 
@@ -127,22 +126,11 @@ const ImportUser = ({ title }) => {
     console.log(listUser);
   }, [listUser]);
 
-  const handleExecuteImport = () => {
-    let newList = listUser.map((user) => {
-      if (user.status !== 2) {
-        user.status = 4;
-      }
-      return user;
-    });
-    setListUser(newList);
-    executeImport();
-  };
-
   useEffect(() => {
     document.title = title;
 
     loadDataUser();
-  }, []);
+  }, [title]);
 
   return (
     <div className={classes.main}>
