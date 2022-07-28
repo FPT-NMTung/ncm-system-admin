@@ -4,7 +4,7 @@ import FetchApi from '../../api/FetchApi';
 import { UserApis } from '../../api/ListApi';
 import { Grid, Card } from '@nextui-org/react';
 import TableUser from '../../components/TableUser/TableUser';
-import classes from './User.module.css'
+import classes from './User.module.css';
 
 const User = ({ title }) => {
   const [data, setData] = useState({});
@@ -113,11 +113,11 @@ const User = ({ title }) => {
     node
       .append('circle')
       .attr('r', 8)
-      .attr('fill', function (d) {
-        return d.isActive ? '#06d139' : '#d12406';
+      .attr("fill", function (d) {
+        return d.children ? "#ffffff" : "#707070";
       })
-      .attr('stroke', '#6b6b6b')
-      .attr('stroke-width', '2px')
+      .attr("stroke", "#ffffff")
+      .attr("stroke-width", "2px")
       .attr('cursor', 'pointer')
       .attr('title', function (d) {
         return d.name;
@@ -174,8 +174,15 @@ const User = ({ title }) => {
 
     node
       .append('text')
-      .attr('fill', '#F36823')
+      .attr('fill', function (d) {
+        if (!d.isActive) {
+          return '#ff553b'
+        } else {
+          return '#38f323'
+        }
+      })
       .attr('font-size', '8px')
+      .attr('font-weight', '500')
       .attr('cursor', 'pointer')
       .text(function (d) {
         return `Uid: ${d.id}`;

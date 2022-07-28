@@ -44,7 +44,7 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
       refEmail.current.value = userData.email.trim();
 
       const listEmailUserImportBefore = list.filter((item) => {
-        return item.id < userData.id;
+        return item.id < userData.id && item.role_id !== 1;
       }).map((item) => {
         return item.email;
       })
@@ -82,8 +82,6 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
     const email = refEmail.current.value;
     const role = selectRole;
     const manager = selectManager;
-
-    console.log(manager);
 
     if (
       name === undefined ||
