@@ -18,7 +18,17 @@ export const UserApis = {
     url: '/api/admin/list-email-user',
     method: 'GET',
     contextType: 'application/json',
-  }
+  },
+  listAllUser: {
+    url: '/api/admin/user/list',
+    method: 'GET',
+    contextType: 'application/json',
+  },
+  getParentOfUser: {
+    url: '/api/admin/user/{0}/parent',
+    method: 'GET',
+    contextType: 'application/json',
+  },
 };
 
 export const ContactApis = {
