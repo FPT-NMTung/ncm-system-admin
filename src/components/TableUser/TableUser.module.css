@@ -3,52 +3,64 @@
     margin-right: 20px;
 }
 
-.title {
-    margin: 0;
-}
-
-.loading {
-    height: 400px;
-
-    display        : flex;
-    justify-content: center;
-    align-items    : center;
-}
-
-.header {
+.headerLayout {
     display        : flex;
     justify-content: space-between;
     align-items    : center;
 }
 
+.iconSearch {
+    margin-top: 5px;
+}
+
+.buttonSearch {
+    outline         : none;
+    border          : none;
+    background-color: transparent;
+    cursor          : pointer;
+}
+
+.selectInfor {
+    margin    : 20px 0;
+    list-style: none;
+}
+
+.selectInfor li {
+    margin-top: 10px;
+}
+
 .active {
-    display         : inline-block;
-    padding         : 4px 8px;
-    border-radius   : 10em;
-    background-color: #efffe7;
-    color           : #006600;
+    background-color: rgb(198, 255, 193);
+    color           : rgb(0, 151, 13);
+    padding         : 4px 10px;
+    border-radius   : 15px;
+    margin-left     : 10px;
+}
+
+.activeTable {
+    background-color: rgb(198, 255, 193);
+    color           : rgb(0, 151, 13);
+    width           : fit-content;
+    padding         : 4px 10px;
+    border-radius   : 15px;
 }
 
 .deactive {
-    display         : inline-block;
-    padding         : 4px 8px;
-    border-radius   : 10em;
-    background-color: #ffecec;
-    color           : #8b0000;
+    background-color: rgb(255, 193, 193);
+    color           : rgb(151, 0, 0);
+    padding         : 4px 10px;
+    border-radius   : 15px;
+    margin-left     : 10px;
 }
 
-.titleTable {
-    padding: 20px;
-    margin: 0;
-    font-weight: 500;
+.deactiveTable {
+    background-color: rgb(255, 193, 193);
+    color           : rgb(151, 0, 0);
+    width           : fit-content;
+    padding         : 4px 10px;
+    border-radius   : 15px;
 }
 
-.titleTable span {
-    font-weight: bold;
-}
-
-.titleManage {
-    padding: 20px;
-    margin: 0;
-    font-weight: 500;
+.iconBtn {
+    cursor: pointer;
 }

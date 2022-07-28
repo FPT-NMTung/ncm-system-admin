@@ -67,7 +67,7 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
           console.log('error');
         });
     }
-  }, [userData]);
+  }, [userData, list]);
 
   const handleChangeRole = (e) => {
     setSelectRole(e);
