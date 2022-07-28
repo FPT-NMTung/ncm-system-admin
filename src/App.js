@@ -13,6 +13,11 @@ import RequestChangeOwnerContact from "./screens/RequestChangeOwnerContact/Reque
 import Test from "./screens/Test/Test";
 
 function App() {
+  window.addEventListener('beforeunload', () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  })
+
   return (
     <Routes>
       <Route path="/login" element={<NoRequireAuth><Login title="Login | Administrator"/></NoRequireAuth>}/>
@@ -29,7 +34,7 @@ function App() {
       <Route path="/request-change-owner-contact/:id/:code" element={<RequestChangeOwnerContact title="Request Change Owner Contact"/>}/>
       <Route path="/404" element={<NotFound title="404 - Page not found"/>}/>
       <Route path="*" element={<NotFound title="404 - Page not found"/>}/>
-    </Routes>
+    </Routes> 
   );
 }
 
