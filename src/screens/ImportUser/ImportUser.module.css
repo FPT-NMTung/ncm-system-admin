@@ -21,3 +21,14 @@
 
     color: rgb(133, 133, 133);
 }
+
+.warningHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.warningHeader > p {
+    margin: 0 0 0 10px;
+    font-size: 20px;
+}

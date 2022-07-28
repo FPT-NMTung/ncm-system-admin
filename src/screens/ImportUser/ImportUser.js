@@ -7,14 +7,17 @@ import FetchApi from '../../api/FetchApi';
 import { ImportUserApis } from '../../api/ListApi';
 import { IoMdCloudDone } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
+import { TiWarning } from 'react-icons/ti';
 import DetailUserImported from '../../components/DetailUserImported/DetailUserImported';
 
 import classes from './ImportUser.module.css';
+import AlertCustom from '../../CommonComponent/AlertCustom/AlertCustom';
 
 const { Dragger } = Upload;
 
 const ImportUser = ({ title }) => {
   const [showModalUpload, setShowModalUpload] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [statusUpload, setStatusUpload] = useState('none');
 
@@ -64,7 +67,7 @@ const ImportUser = ({ title }) => {
   const handleChangeUserSuccess = (userId, data) => {
     const user = listUser.find((user) => {
       return user.id === userId;
-    })
+    });
 
     if (user) {
       user.name = data.name;
@@ -75,9 +78,10 @@ const ImportUser = ({ title }) => {
       console.log(listUser);
       setListUser([...listUser]);
     }
-  }
+  };
 
   const executeImport = async () => {
+    setShowWarning(false);
     for (let index = 0; index < listUser.length; index++) {
       const user = listUser[index];
 
@@ -95,15 +99,28 @@ const ImportUser = ({ title }) => {
         if (user.status === 3) {
           const t = listUser.map((e) => {
             if (e.status === 4) {
-              e.status = 1
+              e.status = 1;
             }
             return e;
-          })
+          });
           setListUser([...t]);
           break;
-        };
+        }
       }
     }
+  };
+
+  const handleExecuteButtonClick = () => {
+    const saleDirector = listUser.find((user) => {
+      return user.role_id === 3;
+    });
+
+    if (saleDirector) {
+      setShowWarning(true);
+      return
+    }
+
+    executeImport();
   };
 
   useEffect(() => {
@@ -173,7 +190,7 @@ const ImportUser = ({ title }) => {
                 color={'success'}
                 css={{ width: 130 }}
                 icon={<IoMdCloudUpload size={20} />}
-                onClick={handleExecuteImport}
+                onPress={handleExecuteButtonClick}
               >
                 Execute import
               </Button>
@@ -196,9 +213,47 @@ const ImportUser = ({ title }) => {
           </Card>
         </Grid>
         <Grid sm={5.5}>
-          <DetailUserImported list={listUser} userData={selectEditUser} onChangeSuccess={handleChangeUserSuccess}/>
+          <DetailUserImported
+            list={listUser}
+            userData={selectEditUser}
+            onChangeSuccess={handleChangeUserSuccess}
+          />
         </Grid>
       </Grid.Container>
+      <Modal
+        closeButton
+        aria-labelledby="modal-title"
+        width={500}
+        open={showWarning}
+        onClose={() => {
+          setShowWarning(false);
+        }}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiWarning size={30} color={'#ffc107'} />
+            <p>Warning !</p>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            In your import user list there is{' '}
+            <strong>one or more sales director</strong>. If you continue, the
+            system will:
+          </p>
+          <ul>
+            <li>Deactive sales director current.</li>
+            <li>Transfer employees to new sales director.</li>
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={executeImport} auto flat color="warning">
+            Accept
+          </Button>
+          <Button onClick={() => {setShowWarning(false)}} auto>Cancel</Button>
+        </Modal.Footer>
+      </Modal>
       <Modal
         blur
         aria-labelledby="modal-title"
