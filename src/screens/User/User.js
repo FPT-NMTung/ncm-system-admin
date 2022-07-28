@@ -4,7 +4,6 @@ import FetchApi from '../../api/FetchApi';
 import { UserApis } from '../../api/ListApi';
 import { Grid, Card } from '@nextui-org/react';
 import TableUser from '../../components/TableUser/TableUser';
-import classes from './User.module.css';
 
 const User = ({ title }) => {
   const [data, setData] = useState({});
@@ -13,6 +12,7 @@ const User = ({ title }) => {
   const graphRef = createRef();
 
   const handleClickUserGraph = (user) => {
+    console.log(user);
     setDataUserSelect({});
     FetchApi(UserApis.viewTeam, undefined, {
       id: user.id,
@@ -55,7 +55,7 @@ const User = ({ title }) => {
 
       let x, y;
 
-      if (userId == undefined) {
+      if (userId === undefined) {
         y = -target.x * scale + (window.innerHeight - 40) / 2;
         x =
           -target.y * scale +
@@ -92,7 +92,7 @@ const User = ({ title }) => {
       return [d.y, d.x];
     });
 
-    const link = svg
+    svg
       .selectAll('.link')
       .data(links)
       .enter()
@@ -113,11 +113,11 @@ const User = ({ title }) => {
     node
       .append('circle')
       .attr('r', 8)
-      .attr("fill", function (d) {
-        return d.children ? "#ffffff" : "#707070";
+      .attr('fill', function (d) {
+        return d.children ? '#ffffff' : '#707070';
       })
-      .attr("stroke", "#ffffff")
-      .attr("stroke-width", "2px")
+      .attr('stroke', '#ffffff')
+      .attr('stroke-width', '2px')
       .attr('cursor', 'pointer')
       .attr('title', function (d) {
         return d.name;
@@ -176,9 +176,9 @@ const User = ({ title }) => {
       .append('text')
       .attr('fill', function (d) {
         if (!d.isActive) {
-          return '#ff553b'
+          return '#ff553b';
         } else {
-          return '#38f323'
+          return '#38f323';
         }
       })
       .attr('font-size', '8px')
@@ -211,12 +211,13 @@ const User = ({ title }) => {
   useEffect(() => {
     document.title = title;
     handleReload();
-  }, []);
+  }, [title]);
 
   useEffect(() => {
     if (data.id !== undefined) {
       loadD3();
     }
+    // eslint-disable-next-line
   }, [data]);
 
   return (
@@ -224,7 +225,7 @@ const User = ({ title }) => {
       <Grid sm={6.5}>
         <TableUser
           dataUser={dataUserSelect}
-          onButtonReloadClick={handleReload}
+          onChangeSelectUser={handleClickUserGraph}
         />
       </Grid>
       <Grid sm={5.5}>

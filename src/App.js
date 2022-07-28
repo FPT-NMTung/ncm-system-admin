@@ -29,7 +29,7 @@ function App() {
       <Route path="/request-change-owner-contact/:id/:code" element={<RequestChangeOwnerContact title="Request Change Owner Contact"/>}/>
       <Route path="/404" element={<NotFound title="404 - Page not found"/>}/>
       <Route path="*" element={<NotFound title="404 - Page not found"/>}/>
-    </Routes>
+    </Routes> 
   );
 }
 
