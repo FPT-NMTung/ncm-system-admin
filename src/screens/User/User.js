@@ -40,7 +40,7 @@ const User = ({ title }) => {
     }
 
     let zoom = d3.behavior.zoom().scaleExtent([0.1, 5]).on('zoom', handleZoom);
-    zoom.scale(0.5);
+    zoom.scale(1);
 
     function centerNode(source, userId) {
       const target = source.find((e) => {
@@ -59,7 +59,7 @@ const User = ({ title }) => {
         y = -target.x * scale + (window.innerHeight - 40) / 2;
         x =
           -target.y * scale +
-          (window.innerHeight - 40) / 2 -
+          (window.innerHeight - 40) / 3 -
           (window.innerHeight - 40) / 4;
       } else {
         y = -target.x * scale + (window.innerHeight - 40) / 2;
