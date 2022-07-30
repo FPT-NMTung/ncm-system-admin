@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Grid, Card, Text, Input, Spacer, Button, Modal } from '@nextui-org/react';
-import { TiWarning, TiTick } from 'react-icons/ti';
-import { Select, Alert } from 'antd';
+import { TiWarning, TiTick, TiDelete } from 'react-icons/ti';
+import { MdKeyboardBackspace } from 'react-icons/md'
+import { Select } from 'antd';
 import classes from './AddUser.module.css';
 import FetchApi from '../../api/FetchApi';
 import { ImportUserApis } from '../../api/ListApi';
@@ -29,8 +30,9 @@ const AddUser = ({ title }) => {
   const inputName = useRef();
   const inputEmail = useRef();
   const [showWarning, setShowWarning] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false); 
+  const [showSuccess, setShowSuccess] = useState(false);
   const [alertError, setAlertError] = useState(false);
+  const [alertErrorMessage, setAlertErrorMessage] = useState('');
   const [alertWarning, setAlertWarning] = useState(false);
   const [alertWarningMessage, setAlertWarningMessage] = useState('');
   useEffect(() => {
@@ -52,13 +54,13 @@ const AddUser = ({ title }) => {
   useEffect(() => {
     setTimeout(() => {
       setAlertError(false);
-    }, 2000);
+    }, 1500);
   }, [alertError]);
 
   useEffect(() => {
     setTimeout(() => {
       setAlertWarning(false);
-    }, 2000);
+    }, 1500);
   }, [alertWarning]);
 
   const handleNameChange = (e) => {
@@ -71,7 +73,6 @@ const AddUser = ({ title }) => {
 
   const handleChangeRole = (value) => {
     setSelectRole(value);
-    value === 3 && setManagerEmail();
   }
 
   const handleChangeManager = (value) => {
@@ -88,19 +89,19 @@ const AddUser = ({ title }) => {
       return;
     }
 
-    if(!selectRole){
+    if (!selectRole) {
       setAlertWarning(true);
       setAlertWarningMessage('Please select role');
       return;
     }
 
-    if(selectRole !== 3 && !managerEmail) {
+    if (selectRole !== 3 && !managerEmail) {
       setAlertWarning(true);
       setAlertWarningMessage('Please select manager');
       return;
     }
 
-    if(selectRole === 3) {
+    if (selectRole === 3) {
       setShowWarning(true);
       return;
     }
@@ -112,18 +113,30 @@ const AddUser = ({ title }) => {
       manager_email: managerEmail
     }
 
-    FetchApi(ImportUserApis.addUser,data, undefined, undefined)
-    .then((res) => {
-      setShowSuccess(true);
-    })
-    .catch((err) => {
-      setAlertError(true);
-    })
-
-    setTimeout(() => {
-      setShowSuccess(false);
-      navigator('/user');
-    }, 1000);
+    FetchApi(ImportUserApis.addUser, data, undefined, undefined)
+      .then((res) => {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          navigator('/user');
+        }, 1000);
+      })
+      .catch((err) => {
+        if (err.message === 'A0011') {
+          setAlertError(true);
+          setAlertErrorMessage("Can't deactive manager has child")
+        }
+        if(err.message === 'A0004'){
+          setAlertError(true);
+          setAlertErrorMessage("Request Change invalid")
+        }
+        if(err.message === 'A0005'){
+          setAlertError(true);
+          setAlertErrorMessage("Email invalid")
+        }  
+      })
+    
+    setShowWarning(false);
   }
 
   const handleAddUserWarning = () => {
@@ -136,100 +149,160 @@ const AddUser = ({ title }) => {
       role_id: selectRole,
     }
 
-    FetchApi(ImportUserApis.addUser,data, undefined, undefined)
-    .then((res) => {
-      setShowSuccess(true);
-    })
-    .catch((err) => {
-      console.log(err)
-      setAlertError(true);
-    })
+    FetchApi(ImportUserApis.addUser, data, undefined, undefined)
+      .then((res) => {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          navigator('/user');
+        }, 1000);
+      })
+      .catch((err) => {
+        if (err.message === 'A0011') {
+          setAlertError(true);
+          setAlertErrorMessage("Can't deactive manager has child")
+        }
+        if(err.message === 'A0004'){
+          setAlertError(true);
+          setAlertErrorMessage("Request Change invalid")
+        }
+        if(err.message === 'A0005'){
+          setAlertError(true);
+          setAlertErrorMessage("Email invalid")
+        }  
+      })
     setShowWarning(false);
-    navigator('/user');
   }
 
   return (
     <div>
       <Grid.Container>
-      <Grid sm={6.5}>
-        <div className={classes.main}>
-          <Card
-            css={{
-              marginBottom: 20,
-              padding: 20,
-            }}
-          >
-            <Text h2 css={{ margin: 0 }}>
-              Add user
-            </Text>
-          </Card>
-          <Card
-            css={{
-              marginBottom: 20,
-              padding: 20,
-            }}
-          >
-            <Input
-              css={{ width: 400 }}
-              label="Name"
-              ref={inputName}
-              onChange={handleNameChange}
-            />
-            <Spacer y={0.5} />
-            <Input
-              css={{ width: 400 }}
-              label="Email"
-              ref={inputEmail}
-              onChange={handleEmailChange}
-            />
-            <Spacer y={0.5} />
-            <p className={classes.textManage}>Role</p>
-            <Select
-              style={{ width: 400 }}
-              placeholder="Select role"
-              value={selectRole}
-              onChange={handleChangeRole}
+        <Grid sm={6.5}>
+          <div className={classes.main}>
+            <Card
+              css={{
+                marginBottom: 20,
+                padding: 20,
+              }}
             >
-              {listRole.map((item) => (
-                <Select.Option key={item.id} value={item.id}>
-                  {item.value}
-                </Select.Option>
-              ))}
-            </Select>
-            {selectRole !== 3 &&
-              <div>
-                <Spacer y={0.5} />
-                <p className={classes.textManage}>Manager's email</p>
-                <Select
-                  style={{ width: 400 }}
-                  showSearch
-                  placeholder="Select email"
-                  options={listEmail}
-                  value={managerEmail}
-                  onChange={handleChangeManager}
-                />
-              </div>
-            }
-            <Spacer y={1.5} />
-            <Button
-              css={{ width: 100 }}
-              auto
-              onPress={handleAddUser}
+              <Grid.Container alignItems="center">
+                <Grid xs={3}>
+                  <Button
+                    onClick={() => {
+                      navigator('/user');
+                    }}
+                    size="xs"
+                    flat
+                    auto
+                    icon={<MdKeyboardBackspace size={18} />}
+                  >
+                    Back
+                  </Button>
+                </Grid>
+                <Grid xs={6} justify="center">
+                  <Text h2 css={{ margin: 0, textAlign: 'center' }}>
+                    Add user
+                  </Text>
+                </Grid>
+              </Grid.Container>
+            </Card>
+            <Card
+              css={{
+                marginBottom: 20,
+                padding: 20,
+              }}
             >
-              Add
-            </Button>
-          </Card>
-        </div>
-      </Grid>
-    </Grid.Container>
-    <div className={classes.alert}>
-      {alertError &&
-        <Alert closable type="error" message={'Request Change invalid'} />
-      }
-      {alertWarning &&
-        <Alert closable type="warning" message={alertWarningMessage} />
-      }
-    </div>
+              <Input
+                css={{ width: 400 }}
+                label="Name"
+                ref={inputName}
+                onChange={handleNameChange}
+              />
+              <Spacer y={0.5} />
+              <Input
+                css={{ width: 400 }}
+                label="Email"
+                ref={inputEmail}
+                onChange={handleEmailChange}
+              />
+              <Spacer y={0.5} />
+              <p className={classes.textManage}>Role</p>
+              <Select
+                style={{ width: 400 }}
+                placeholder="Select role"
+                value={selectRole}
+                onChange={handleChangeRole}
+              >
+                {listRole.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {item.value}
+                  </Select.Option>
+                ))}
+              </Select>
+              {selectRole !== 3 &&
+                <div>
+                  <Spacer y={0.5} />
+                  <p className={classes.textManage}>Manager's email</p>
+                  <Select
+                    style={{ width: 400 }}
+                    showSearch
+                    placeholder="Select email"
+                    options={listEmail}
+                    value={managerEmail}
+                    onChange={handleChangeManager}
+                  />
+                </div>
+              }
+              <Spacer y={1.5} />
+              <Button
+                css={{ width: 100 }}
+                auto
+                onPress={handleAddUser}
+              >
+                Add
+              </Button>
+            </Card>
+          </div>
+        </Grid>
+      </Grid.Container>
+      <Modal
+        aria-labelledby="modal-title"
+        width={300}
+        open={alertWarning}
+        onClose={() => {
+          setAlertWarning(false);
+        }}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiWarning size={30} color={'#ffc107'} />
+            <p className={classes.TextAlert}>Warning !</p>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <p className={classes.TextAlert}>{alertWarningMessage}</p>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        aria-labelledby="modal-title"
+        width={300}
+        open={alertError}
+        onClose={() => {
+          setAlertError(false);
+        }}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiDelete size={30} color={'#f31260'} />
+            <p className={classes.TextAlert}>Error !</p>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <p className={classes.TextAlert}>{alertErrorMessage}</p>
+        </Modal.Body>
+      </Modal>
       <Modal
         closeButton
         aria-labelledby="modal-title"
@@ -260,7 +333,7 @@ const AddUser = ({ title }) => {
           <Button onClick={handleAddUserWarning} auto flat color="warning">
             Accept
           </Button>
-          <Button onClick={() => {setShowWarning(false)}} auto>Cancel</Button>
+          <Button onClick={() => { setShowWarning(false) }} auto>Cancel</Button>
         </Modal.Footer>
       </Modal>
       <Modal
@@ -277,7 +350,7 @@ const AddUser = ({ title }) => {
         </Modal.Header>
       </Modal>
     </div>
-    
+
   );
 };
 

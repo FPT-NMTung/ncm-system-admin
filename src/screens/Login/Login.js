@@ -24,11 +24,10 @@ const Login = ({ title }) => {
 
   useEffect(() => {
     document.title = title;
+    // eslint-disable-next-line
   }, []);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-
     const valueRefEmail = refEmail.current.value.trim();
     const valueRefPassword = refPassword.current.value.trim();
 
@@ -71,6 +70,7 @@ const Login = ({ title }) => {
       <div className={classes.backgroundB} />
       <img
         src="https://ncmsystem.azurewebsites.net/Images/NCM.png"
+        alt='NCM'
         className={classes.logo}
       />
       <div className={classes.card}>

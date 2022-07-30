@@ -29,6 +29,11 @@ export const UserApis = {
     method: 'GET',
     contextType: 'application/json',
   },
+  searchUser: {
+    url: '/api/admin/search',
+    method: 'GET',
+    contextType: 'application/json',
+  }
 };
 
 export const ContactApis = {
