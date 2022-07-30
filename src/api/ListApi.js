@@ -84,6 +84,21 @@ export const ImportUserApis = {
     url: '/api/admin/user-imported/{0}',
     method: 'PUT',
     contextType: 'application/json',
+  },
+  addUser: {
+    url: '/api/admin/user',
+    method: 'POST',
+    contextType: 'application/json',
+  },
+  detailUser: {
+    url: '/api/admin/user/{0}',
+    method: 'GET',
+    contextType: 'application/json',
+  },
+  updateUserDetail: {
+    url: '/api/admin/user/{0}',
+    method: 'PUT',
+    contextType: 'application/json',
   }
 };
 
