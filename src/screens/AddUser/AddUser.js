@@ -61,6 +61,14 @@ const AddUser = ({ title }) => {
     }, 2000);
   }, [alertWarning]);
 
+  const handleNameChange = (e) => {
+    inputName.current.value = e.target.value;
+  };
+  const handleEmailChange = (e) => {
+    inputEmail.current.value = e.target.value;
+  };
+
+
   const handleChangeRole = (value) => {
     setSelectRole(value);
     value === 3 && setManagerEmail();
@@ -71,8 +79,8 @@ const AddUser = ({ title }) => {
   }
 
   const handleAddUser = () => {
-    const name = inputName.current.value;
-    const email = inputEmail.current.value;
+    const name = inputName.current.value.trim();
+    const email = inputEmail.current.value.trim();
 
     if (!name || !email || !name.trim() || !email.trim()) {
       setAlertWarning(true);
@@ -140,8 +148,6 @@ const AddUser = ({ title }) => {
     navigator('/user');
   }
 
-
-
   return (
     <div>
       <Grid.Container>
@@ -167,12 +173,14 @@ const AddUser = ({ title }) => {
               css={{ width: 400 }}
               label="Name"
               ref={inputName}
+              onChange={handleNameChange}
             />
             <Spacer y={0.5} />
             <Input
               css={{ width: 400 }}
               label="Email"
               ref={inputEmail}
+              onChange={handleEmailChange}
             />
             <Spacer y={0.5} />
             <p className={classes.textManage}>Role</p>
