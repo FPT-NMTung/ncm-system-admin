@@ -26,11 +26,11 @@ const UserDetail = ({ title }) => {
   const navigator = useNavigate();
   const param = useParams()
   const [listEmail, setListEmail] = useState([]);
+  const [nameUser, setNameUser] = useState();
+  const [emailUser, setEmailUser] = useState();
   const [selectRole, setSelectRole] = useState();
   const [managerEmail, setManagerEmail] = useState();
   const [isActive, setIsActive] = useState(true);
-  const inputName = useRef();
-  const inputEmail = useRef();
   const [user, setUser] = useState()
   const [showWarning, setShowWarning] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false); 
@@ -42,12 +42,13 @@ const UserDetail = ({ title }) => {
     if (param.id) {
       FetchApi(ImportUserApis.detailUser, undefined, undefined, [param.id])
         .then((res) => {
+          console.log(res.data)
           setUser(res.data)
           setSelectRole(res.data.role_id)
           setManagerEmail(res.data.email_manager)
           setIsActive(res.data.is_active)
-          inputName.current.value = res.data.name
-          inputEmail.current.value = res.data.email
+          setNameUser(res.data.name)
+          setEmailUser(res.data.email)
         })
         .catch((err) => {
 
@@ -80,10 +81,10 @@ const UserDetail = ({ title }) => {
   }, [alertWarning]);
 
   const handleNameChange = (e) => {
-    inputName.current.value = e.target.value;
+    setNameUser(e.target.value)
   };
   const handleEmailChange = (e) => {
-    inputEmail.current.value = e.target.value;
+    setEmailUser(e.target.value)
   };
 
   const handleChangeRole = (value) => {
@@ -96,8 +97,8 @@ const UserDetail = ({ title }) => {
   }
 
   const handleAddUser = () => {
-    const name = inputName.current.value.trim();
-    const email = inputEmail.current.value.trim();
+    const name = nameUser.trim();
+    const email = emailUser.trim();
 
     if (!name || !email || !name.trim() || !email.trim()) {
       setAlertWarning(true);
@@ -145,8 +146,8 @@ const UserDetail = ({ title }) => {
   }
 
   const handleAddUserWarning = () => {
-    const name = inputName.current.value;
-    const email = inputEmail.current.value;
+    const name = nameUser.trim();
+    const email = emailUser.trim();
 
     const data = {
       name: name,
@@ -203,14 +204,14 @@ const UserDetail = ({ title }) => {
                 <Input
                   css={{ width: 400 }}
                   label="Name"
-                  ref={inputName}
+                  value={nameUser}
                   onChange={handleNameChange}
                 />
                 <Spacer y={0.5} />
                 <Input
                   css={{ width: 400 }}
                   label="Email"
-                  ref={inputEmail}
+                  value={emailUser}
                   onChange={handleEmailChange}
                 />
                 <Spacer y={0.5} />
