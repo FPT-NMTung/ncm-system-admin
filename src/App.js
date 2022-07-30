@@ -13,6 +13,11 @@ import RequestChangeOwnerContact from "./screens/RequestChangeOwnerContact/Reque
 import Test from "./screens/Test/Test";
 
 function App() {
+  window.addEventListener('beforeunload', () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  })
+
   return (
     <Routes>
       <Route path="/login" element={<NoRequireAuth><Login title="Login | Administrator"/></NoRequireAuth>}/>
