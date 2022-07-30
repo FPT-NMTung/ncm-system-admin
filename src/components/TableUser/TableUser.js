@@ -300,7 +300,7 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
             </div>
           </Card>
           <Text h4 css={{ margin: '0 0 5px 0', textAlign: 'center' }}>
-            List of employees of ABC:
+            List of employees of {dataUser.name}:
           </Text>
 
           <Card

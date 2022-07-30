@@ -14,6 +14,11 @@ import Test from "./screens/Test/Test";
 import AddUser from "./screens/AddUser/AddUser";
 
 function App() {
+  window.addEventListener('beforeunload', () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  })
+
   return (
     <Routes>
       <Route path="/login" element={<NoRequireAuth><Login title="Login | Administrator"/></NoRequireAuth>}/>
