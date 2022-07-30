@@ -27,7 +27,7 @@ function App() {
         <Route path="/user">
           <Route index element={<User title="Manager User | Administrator"/>}/>
           <Route path="/user/:id" element={<UserDetail title="User Detail | Administrator"/>}/>
-          <Route path="/user/add" element={<AddUser title="Add User | Administrator"/>}/>        
+          <Route path="/user/add" element={<AddUser title="Add User | Administrator"/>}/>
         </Route>
         <Route path="/manage-contact" element={<Contact title="Manager Contact | Administrator"/>}/>
         <Route path="/import-user" element={<ImportUser title="Import User | Administrator"/>}/>
