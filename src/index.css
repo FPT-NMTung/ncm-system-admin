@@ -68,7 +68,11 @@ code {
 }
 
 .ant-alert-warning {
-  background-color: #fdefd8 !important;
+  background-color: #f9cb80 !important;
+}
+
+.ant-alert-error {
+  background-color: #fdd8e5 !important;
 }
 
 .ant-select-selection-item {

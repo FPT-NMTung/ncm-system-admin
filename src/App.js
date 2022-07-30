@@ -11,6 +11,7 @@ import ImportUser from "./screens/ImportUser/ImportUser";
 import Contact from "./screens/Contact/Contact";
 import RequestChangeOwnerContact from "./screens/RequestChangeOwnerContact/RequestChangeOwnerContact";
 import Test from "./screens/Test/Test";
+import AddUser from "./screens/AddUser/AddUser";
 
 function App() {
   window.addEventListener('beforeunload', () => {
@@ -25,7 +26,8 @@ function App() {
         <Route index element={<Dashboard title="Dashboard | Administrator"/>}/>
         <Route path="/user">
           <Route index element={<User title="Manager User | Administrator"/>}/>
-          <Route path="/user/:id" element={<UserDetail title="User Detail | Administrator"/>}/>        
+          <Route path="/user/:id" element={<UserDetail title="User Detail | Administrator"/>}/>
+          <Route path="/user/add" element={<AddUser title="Add User | Administrator"/>}/>        
         </Route>
         <Route path="/manage-contact" element={<Contact title="Manager Contact | Administrator"/>}/>
         <Route path="/import-user" element={<ImportUser title="Import User | Administrator"/>}/>
