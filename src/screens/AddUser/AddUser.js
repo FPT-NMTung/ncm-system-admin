@@ -127,8 +127,8 @@ const AddUser = ({ title }) => {
   }
 
   const handleAddUserWarning = () => {
-    const name = inputName.current.value;
-    const email = inputEmail.current.value;
+    const name = inputName.current.value.trim();
+    const email = inputEmail.current.value.trim();
 
     const data = {
       name: name,
