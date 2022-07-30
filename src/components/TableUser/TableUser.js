@@ -10,12 +10,14 @@ import {
 } from '@nextui-org/react';
 import { GrView } from 'react-icons/gr';
 import { TbEdit } from 'react-icons/tb';
+import { FaUserPlus } from 'react-icons/fa';
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { Fragment, useEffect, useState } from 'react';
 
 import classes from './TableUser.module.css';
 import FetchApi from '../../api/FetchApi';
 import { UserApis } from '../../api/ListApi';
+import { useNavigate } from 'react-router-dom';
 
 function toLowerCaseNonAccentVietnamese(str) {
   str = str.toLowerCase();
@@ -32,6 +34,7 @@ function toLowerCaseNonAccentVietnamese(str) {
 }
 
 const TableUser = ({ dataUser, onChangeSelectUser }) => {
+  const navigation = useNavigate()
   const [isSearch, setIsSearch] = useState(false);
   const [listAllUser, setListAllUser] = useState([]);
   const [listSearchUser, setListSearchUser] = useState([]);
@@ -105,6 +108,13 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
             contentRightStyling={false}
             placeholder="Search user by name, email, ..."
           />
+          <Button 
+            flat
+            icon={<FaUserPlus size={18}/>}
+            onPress={() => navigation('/user/add')}
+          >
+            Add User
+          </Button>
         </div>
       </Card>
       {isSearch && (
@@ -193,7 +203,10 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
                       </Table.Cell>
                       <Table.Cell>
                         <Tooltip content={'Edit'} rounded color="primary">
-                          <div className={classes.iconBtn}>
+                          <div 
+                            className={classes.iconBtn}
+                            onClick={() => {navigation(`/user/${item.id}`)}}
+                          >
                             <TbEdit size={18} />
                           </div>
                         </Tooltip>
@@ -281,7 +294,7 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
                   </span>
                 </li>
               </ul>
-              <Button flat auto icon={<TbEdit size={18} />}>
+              <Button flat auto icon={<TbEdit size={18} />} onClick={() => {navigation(`/user/${dataUser.id}`)}}>
                 Edit
               </Button>
             </div>
@@ -352,7 +365,10 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
                       </Table.Cell>
                       <Table.Cell>
                         <Tooltip content={'Edit'} rounded color="primary">
-                          <div className={classes.iconBtn}>
+                          <div 
+                            className={classes.iconBtn}
+                            onClick={() => {navigation(`/user/${item.id}`)}}
+                          >
                             <TbEdit size={18} />
                           </div>
                         </Tooltip>

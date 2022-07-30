@@ -206,7 +206,6 @@ const Contact = ({ title }) => {
                   style={{ width: 300 }}
                   placeholder={'Input Email'}
                   onSelect={onSelect}
-                  notFoundContent={'Not found'}
                   value={email}
                   status={alertEmail ? 'error' : undefined}
                   onChange={onChange}
