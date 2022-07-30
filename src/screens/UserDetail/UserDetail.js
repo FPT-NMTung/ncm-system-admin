@@ -2,7 +2,8 @@ import { Grid, Card, Text, Spacer, Input, Button, Loading, Switch, Modal } from 
 import { useEffect, useState, useRef } from "react";
 import { Select, Alert } from "antd";
 import { FaUserAltSlash, FaUserAlt } from 'react-icons/fa'
-import { TiWarning, TiTick } from 'react-icons/ti';
+import { MdKeyboardBackspace } from 'react-icons/md'
+import { TiWarning, TiTick, TiDelete } from 'react-icons/ti';
 import classes from './UserDetail.module.css';
 import { useNavigate, useParams } from 'react-router-dom'
 import FetchApi from "../../api/FetchApi";
@@ -33,8 +34,9 @@ const UserDetail = ({ title }) => {
   const [isActive, setIsActive] = useState(true);
   const [user, setUser] = useState()
   const [showWarning, setShowWarning] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false); 
+  const [showSuccess, setShowSuccess] = useState(false);
   const [alertError, setAlertError] = useState(false);
+  const [alertErrorMessage, setAlertErrorMessage] = useState('');
   const [alertWarning, setAlertWarning] = useState(false);
   const [alertWarningMessage, setAlertWarningMessage] = useState('');
 
@@ -42,7 +44,6 @@ const UserDetail = ({ title }) => {
     if (param.id) {
       FetchApi(ImportUserApis.detailUser, undefined, undefined, [param.id])
         .then((res) => {
-          console.log(res.data)
           setUser(res.data)
           setSelectRole(res.data.role_id)
           setManagerEmail(res.data.email_manager)
@@ -71,13 +72,13 @@ const UserDetail = ({ title }) => {
   useEffect(() => {
     setTimeout(() => {
       setAlertError(false);
-    }, 2000);
+    }, 1500);
   }, [alertError]);
 
   useEffect(() => {
     setTimeout(() => {
       setAlertWarning(false);
-    }, 2000);
+    }, 1500);
   }, [alertWarning]);
 
   const handleNameChange = (e) => {
@@ -89,7 +90,6 @@ const UserDetail = ({ title }) => {
 
   const handleChangeRole = (value) => {
     setSelectRole(value);
-    value === 3 && setManagerEmail();
   }
 
   const handleChangeManager = (value) => {
@@ -106,19 +106,19 @@ const UserDetail = ({ title }) => {
       return;
     }
 
-    if(!selectRole){
+    if (!selectRole) {
       setAlertWarning(true);
       setAlertWarningMessage('Please select role');
       return;
     }
 
-    if(selectRole !== 3 && !managerEmail) {
+    if (selectRole !== 3 && !managerEmail) {
       setAlertWarning(true);
       setAlertWarningMessage('Please select manager');
       return;
     }
 
-    if(selectRole === 3) {
+    if (selectRole === 3 && selectRole !== user.role_id) {
       setShowWarning(true);
       return;
     }
@@ -132,17 +132,28 @@ const UserDetail = ({ title }) => {
     }
 
 
-    FetchApi(ImportUserApis.updateUserDetail,data, undefined, [param.id])
-    .then((res) => {
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        navigator('/user');
-      }, 1000);
-    })
-    .catch((err) => {
-      setAlertError(true);
-    })
+    FetchApi(ImportUserApis.updateUserDetail, data, undefined, [param.id])
+      .then((res) => {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          navigator('/user');
+        }, 1000);
+      })
+      .catch((err) => {
+        if (err.message === 'A0011') {
+          setAlertError(true);
+          setAlertErrorMessage("Can't deactive manager has child")
+        }
+        if(err.message === 'A0004'){
+          setAlertError(true);
+          setAlertErrorMessage("Request Change invalid")
+        }
+        if(err.message === 'A0005'){
+          setAlertError(true);
+          setAlertErrorMessage("Email invalid")
+        }       
+      })
   }
 
   const handleAddUserWarning = () => {
@@ -152,27 +163,34 @@ const UserDetail = ({ title }) => {
     const data = {
       name: name,
       email: email,
-      is_active: isActive,
+      is_active: true,
       role_id: selectRole,
     }
 
 
-    FetchApi(ImportUserApis.updateUserDetail,data, undefined, [param.id])
-    .then((res) => {
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
+    FetchApi(ImportUserApis.updateUserDetail, data, undefined, [param.id])
+      .then((res) => {
+        setShowSuccess(true);
         setTimeout(() => {
-          setShowWarning(false);
           setShowSuccess(false);
           navigator('/user');
         }, 1000);
-      }, 1000);
-    })
-    .catch((err) => {
-      setAlertError(true);
-    })
-
+      })
+      .catch((err) => {       
+        if (err.message === 'A0011') {
+          setAlertError(true);
+          setAlertErrorMessage("Can't deactive manager has child")
+        }
+        if(err.message === 'A0004'){
+          setAlertError(true);
+          setAlertErrorMessage("Request Change invalid")
+        }
+        if(err.message === 'A0005'){
+          setAlertError(true);
+          setAlertErrorMessage("Email invalid")
+        }  
+      })
+    setShowWarning(false);
   }
 
   const handleChangeActive = (e) => {
@@ -190,9 +208,26 @@ const UserDetail = ({ title }) => {
                 padding: 20,
               }}
             >
-              <Text h2 css={{ margin: 0 }}>
-                User Detail
-              </Text>
+              <Grid.Container alignItems="center">
+              <Grid xs={3}>
+                <Button
+                  onClick={() => {
+                    navigator('/user');
+                  }}
+                  size="xs"
+                  flat
+                  auto
+                  icon={<MdKeyboardBackspace size={18} />}
+                >
+                  Back
+                </Button>
+              </Grid>
+              <Grid xs={6} justify="center">
+                <Text h2 css={{ margin: 0, textAlign: 'center' }}>
+                  User Detail
+                </Text>
+              </Grid>
+            </Grid.Container>
             </Card>
             <Card
               css={{
@@ -217,6 +252,7 @@ const UserDetail = ({ title }) => {
                 <Spacer y={0.5} />
                 <p className={classes.textManage}>Role</p>
                 <Select
+                  disabled={user.role_id === 3}
                   style={{ width: 400 }}
                   placeholder="Select role"
                   defaultValue={user.role_id}
@@ -242,31 +278,30 @@ const UserDetail = ({ title }) => {
                       value={managerEmail}
                       onChange={handleChangeManager}
                     />
+                    <Spacer y={0.5} />
+                    <div className={classes.switchActive}>
+                      <p className={classes.textActive}>User's active</p>
+                      <Switch
+                        defaultChecked={user.is_active}
+                        checked={isActive}
+                        color="success"
+                        onChange={handleChangeActive}
+                        iconOn={<FaUserAlt />}
+                        iconOff={<FaUserAltSlash />}
+                      />
+                    </div>
                   </div>
                 }
-                <Spacer y={0.5} />
-                <div className={classes.switchActive}>
-                  <p className={classes.textActive}>User's active</p>
-                  <Switch
-                    defaultChecked={user.is_active}
-                    checked={isActive}
-                    color="success"
-                    onChange={handleChangeActive}
-                    iconOn={<FaUserAlt />}
-                    iconOff={<FaUserAltSlash />}
-                  />
-                </div>
-
                 <Spacer y={1.5} />
                 <Button
                   css={{ width: 100 }}
                   auto
                   onPress={handleAddUser}
                 >
-                  Edit
+                  Submit
                 </Button>
               </div>}
-              {!user && <div><Loading color={"primary"} /></div>}
+              {!user && <div className={classes.loadingUser}><Loading color={"primary"} /></div>}
             </Card>
           </div>
         </Grid>
@@ -276,14 +311,44 @@ const UserDetail = ({ title }) => {
           </Card>
         </Grid> */}
       </Grid.Container>
-          <div className={classes.alert}>
-      {alertError &&
-        <Alert closable type="error" message={'Request Change invalid'} />
-      }
-      {alertWarning &&
-        <Alert closable type="warning" message={alertWarningMessage} />
-      }
-    </div>
+      <Modal
+        aria-labelledby="modal-title"
+        width={300}
+        open={alertWarning}
+        onClose={() => {
+          setAlertWarning(false);
+        }}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiWarning size={30} color={'#ffc107'} />
+            <p className={classes.TextAlert}>Warning !</p>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <p className={classes.TextAlert}>{alertWarningMessage}</p>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        aria-labelledby="modal-title"
+        width={300}
+        open={alertError}
+        onClose={() => {
+          setAlertError(false);
+        }}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiDelete size={30} color={'#f31260'} />
+            <p>Error !</p>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <p className={classes.TextAlert}>{alertErrorMessage}</p>
+        </Modal.Body>
+      </Modal>
       <Modal
         closeButton
         aria-labelledby="modal-title"
@@ -314,7 +379,7 @@ const UserDetail = ({ title }) => {
           <Button onClick={handleAddUserWarning} auto flat color="warning">
             Accept
           </Button>
-          <Button onClick={() => {setShowWarning(false)}} auto>Cancel</Button>
+          <Button onClick={() => { setShowWarning(false) }} auto>Cancel</Button>
         </Modal.Footer>
       </Modal>
       <Modal
