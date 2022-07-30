@@ -26,7 +26,9 @@ const Login = ({ title }) => {
     document.title = title;
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     const valueRefEmail = refEmail.current.value.trim();
     const valueRefPassword = refPassword.current.value.trim();
 
@@ -72,58 +74,59 @@ const Login = ({ title }) => {
         className={classes.logo}
       />
       <div className={classes.card}>
-        <Card css={{padding: '5px 10px' }}>
+        <Card css={{ padding: '5px 10px' }}>
           <Card.Body>
             <div className={classes.cardBody}>
               <h3 className={classes.title}>Welcome Administrator</h3>
-              <Input
-                ref={refEmail}
-                className={classes.input}
-                onChange={() => {
-                  setValidEmail(true);
-                }}
-                clearable
-                label="Email"
-                status={validEmail ? 'default' : 'error'}
-                placeholder="example@domain.com"
-              />
-              <Spacer y={0.8} />
-              <Input.Password
-                ref={refPassword}
-                className={classes.input}
-                onChange={() => {
-                  setValidPassword(true);
-                }}
-                clearable
-                status={validPassword ? 'default' : 'error'}
-                label="Password"
-              />
-              {status && (
-                <Fragment>
-                  <Spacer y={0.5} />
-                  <Text
-                    className={classes.errorMessage}
-                    color="error"
-                    size={11}
+              <form onSubmit={handleSubmit}>
+                <Input
+                  ref={refEmail}
+                  className={classes.input}
+                  onChange={() => {
+                    setValidEmail(true);
+                  }}
+                  label="Email"
+                  status={validEmail ? 'default' : 'error'}
+                  placeholder="example@domain.com"
+                />
+                <Spacer y={0.8} />
+                <Input.Password
+                  ref={refPassword}
+                  className={classes.input}
+                  onChange={() => {
+                    setValidPassword(true);
+                  }}
+                  status={validPassword ? 'default' : 'error'}
+                  label="Password"
+                />
+                {status && (
+                  <Fragment>
+                    <Spacer y={0.5} />
+                    <Text
+                      className={classes.errorMessage}
+                      color="error"
+                      size={11}
+                    >
+                      {status}
+                    </Text>
+                  </Fragment>
+                )}
+                <Spacer y={1} />
+                <div className={classes.buttonContain}>
+                  <Button
+                    disabled={loading}
+                    className={classes.button}
+                    shadow
+                    color="primary"
+                    auto
+                    type='submit'
+                    onClick={handleSubmit}
                   >
-                    {status}
-                  </Text>
-                </Fragment>
-              )}
-              <Spacer y={1} />
-              <div className={classes.buttonContain}>
-                <Button
-                  disabled={loading}
-                  className={classes.button}
-                  shadow
-                  color="primary"
-                  auto
-                  onClick={handleSubmit}
-                >
-                  {loading && <Loading color="currentColor" size="xs" />}
-                  {!loading && 'Login'}
-                </Button>
-              </div>
+                    {loading && <Loading color="currentColor" size="xs" />}
+                    {!loading && 'Login'}
+                  </Button>
+                </div>
+              </form>
             </div>
           </Card.Body>
         </Card>
