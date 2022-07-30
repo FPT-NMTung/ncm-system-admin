@@ -7,13 +7,12 @@ import {
   Grid,
   Spacer,
   Tooltip,
+  Loading
 } from '@nextui-org/react';
-import { GrView } from 'react-icons/gr';
-import { TbEdit } from 'react-icons/tb';
 import { FaUserPlus } from 'react-icons/fa';
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { Fragment, useEffect, useState } from 'react';
-
+import { HiDocumentSearch, HiEye, HiPencil } from 'react-icons/hi';
 import classes from './TableUser.module.css';
 import FetchApi from '../../api/FetchApi';
 import { UserApis } from '../../api/ListApi';
@@ -34,14 +33,15 @@ function toLowerCaseNonAccentVietnamese(str) {
 }
 
 const TableUser = ({ dataUser, onChangeSelectUser }) => {
-  const navigation = useNavigate()
+  const navigation = useNavigate();
   const [isSearch, setIsSearch] = useState(false);
-  const [listAllUser, setListAllUser] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState('');
   const [listSearchUser, setListSearchUser] = useState([]);
   const [parent, setParent] = useState(undefined);
 
   useEffect(() => {
-    FetchApi(UserApis.listAllUser, undefined, undefined, undefined)
+    FetchApi(UserApis.searchUser, undefined, { param: '' }, undefined)
       .then((res) => {
         const processList = res.data.map((user) => {
           return {
@@ -50,7 +50,6 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
             processEmail: toLowerCaseNonAccentVietnamese(user.email),
           };
         });
-        setListAllUser(processList);
         setListSearchUser(processList);
       })
       .catch(() => {});
@@ -60,30 +59,43 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
     if (dataUser.id !== undefined) {
       FetchApi(UserApis.getParentOfUser, undefined, undefined, [
         `${dataUser.id}`,
-      ]).then((res) => {
-        setParent(res.data);
-      })
-      .catch(() => {
-        setParent(undefined);
-      })
+      ])
+        .then((res) => {
+          setParent(res.data);
+        })
+        .catch(() => {
+          setParent(undefined);
+        });
     }
   }, [dataUser]);
 
-  const handleChangeValueSearch = (e) => {
-    const listSearch = listAllUser.filter((item) => {
-      return (
-        item.processName
-          .toLowerCase()
-          .includes(toLowerCaseNonAccentVietnamese(e.target.value.trim())) ||
-        item.processEmail
-          .toLowerCase()
-          .includes(toLowerCaseNonAccentVietnamese(e.target.value.trim()))
-      );
-    });
-    setListSearchUser(listSearch);
-  };
+  useEffect(() => {
+    setListSearchUser([]);
+    setLoading(true);
+    const idTimeout = setTimeout(() => {
+      FetchApi(UserApis.searchUser, undefined, { value: search }, undefined)
+        .then((res) => {
+          const processList = res.data.map((user) => {
+            return {
+              ...user,
+              processName: toLowerCaseNonAccentVietnamese(user.name),
+              processEmail: toLowerCaseNonAccentVietnamese(user.email),
+            };
+          });
+          setListSearchUser(processList);
+          setLoading(false);
+        })
+        .catch(() => {});
+    }, 300);
 
-  const handleBackUser = () => {};
+    return () => {
+      clearTimeout(idTimeout);
+    };
+  }, [search]);
+
+  const handleChangeSearch = (e) => {
+    setSearch(e.target.value.trim());
+  };
 
   return (
     <div className={classes.main}>
@@ -98,7 +110,7 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
             Manager user
           </Text>
           <Input
-            onChange={handleChangeValueSearch}
+            onChange={handleChangeSearch}
             onMouseDown={() => {
               setIsSearch(true);
             }}
@@ -108,9 +120,9 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
             contentRightStyling={false}
             placeholder="Search user by name, email, ..."
           />
-          <Button 
+          <Button
             flat
-            icon={<FaUserPlus size={18}/>}
+            icon={<FaUserPlus size={18} />}
             onPress={() => navigation('/user/add')}
           >
             Add User
@@ -146,6 +158,17 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
               </Grid>
             </Grid.Container>
             <Spacer />
+            {listSearchUser.length === 0 && loading && (
+              <div className={classes.contentSearch}>
+                <Loading />
+              </div>
+            )}
+            {listSearchUser.length === 0 && !loading && (
+              <div className={classes.contentSearch}>
+                <HiDocumentSearch color='#999999' size={30}/>
+                <p>No result</p>
+              </div>
+            )}
             {listSearchUser.length !== 0 && (
               <Table
                 css={{
@@ -164,7 +187,7 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
                 </Table.Header>
                 <Table.Body>
                   {listSearchUser.map((item) => (
-                    <Table.Row>
+                    <Table.Row key={item.id}>
                       <Table.Cell>{item.id}</Table.Cell>
                       <Table.Cell>{item.name}</Table.Cell>
                       <Table.Cell>{item.email}</Table.Cell>
@@ -197,17 +220,19 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
                             }}
                             className={classes.iconBtn}
                           >
-                            <GrView size={18} />
+                            <HiEye size={18} />
                           </div>
                         </Tooltip>
                       </Table.Cell>
                       <Table.Cell>
                         <Tooltip content={'Edit'} rounded color="primary">
-                          <div 
+                          <div
                             className={classes.iconBtn}
-                            onClick={() => {navigation(`/user/${item.id}`)}}
+                            onClick={() => {
+                              navigation(`/user/${item.id}`);
+                            }}
                           >
-                            <TbEdit size={18} />
+                            <HiPencil size={18} />
                           </div>
                         </Tooltip>
                       </Table.Cell>
@@ -294,7 +319,14 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
                   </span>
                 </li>
               </ul>
-              <Button flat auto icon={<TbEdit size={18} />} onClick={() => {navigation(`/user/${dataUser.id}`)}}>
+              <Button
+                flat
+                auto
+                icon={<HiPencil size={18} />}
+                onClick={() => {
+                  navigation(`/user/${dataUser.id}`);
+                }}
+              >
                 Edit
               </Button>
             </div>
@@ -359,17 +391,19 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
                             }}
                             className={classes.iconBtn}
                           >
-                            <GrView size={18} />
+                            <HiEye size={18} />
                           </div>
                         </Tooltip>
                       </Table.Cell>
                       <Table.Cell>
                         <Tooltip content={'Edit'} rounded color="primary">
-                          <div 
+                          <div
                             className={classes.iconBtn}
-                            onClick={() => {navigation(`/user/${item.id}`)}}
+                            onClick={() => {
+                              navigation(`/user/${item.id}`);
+                            }}
                           >
-                            <TbEdit size={18} />
+                            <HiPencil size={18} />
                           </div>
                         </Tooltip>
                       </Table.Cell>
