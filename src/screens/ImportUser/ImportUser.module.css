@@ -23,12 +23,26 @@
 }
 
 .warningHeader {
-    display: flex;
+    display        : flex;
     justify-content: center;
-    align-items: center;
+    align-items    : center;
 }
 
-.warningHeader > p {
-    margin: 0 0 0 10px;
+.warningHeader>p {
+    margin   : 0 0 0 10px;
     font-size: 20px;
+}
+
+.loadingDiv {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+
+    flex-direction: column;
+
+    height: 500px;
+
+    color     : #8d8d8d;
+    font-style: italic;
+    font-size : 12px;
 }
