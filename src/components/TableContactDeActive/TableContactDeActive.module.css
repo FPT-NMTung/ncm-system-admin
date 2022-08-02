@@ -1,0 +1,14 @@
+.activeTable {
+    background-color: rgb(198, 255, 193);
+    color           : rgb(0, 151, 13);
+    width           : fit-content;
+    padding         : 4px 10px;
+    border-radius   : 15px;
+}
+.deactiveTable {
+    background-color: rgb(255, 193, 193);
+    color           : rgb(151, 0, 0);
+    width           : fit-content;
+    padding         : 4px 10px;
+    border-radius   : 15px;
+}
