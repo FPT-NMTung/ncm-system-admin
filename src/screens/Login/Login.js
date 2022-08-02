@@ -28,6 +28,8 @@ const Login = ({ title }) => {
   }, []);
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+
     const valueRefEmail = refEmail.current.value.trim();
     const valueRefPassword = refPassword.current.value.trim();
 

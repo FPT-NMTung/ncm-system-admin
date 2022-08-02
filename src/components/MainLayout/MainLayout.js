@@ -1,45 +1,27 @@
-import { Outlet } from "react-router-dom";
-import { Card, Tooltip, Button } from "@nextui-org/react";
-import { FaUserAlt, FaAddressCard } from "react-icons/fa";
-import { IoIosExit } from "react-icons/io";
-import { MdSpaceDashboard, MdCloudUpload } from "react-icons/md";
-import { NavLink, useNavigate } from "react-router-dom";
-
-import classes from "./MainLayout.module.css";
+import { Outlet } from 'react-router-dom';
+import { Card, Tooltip } from '@nextui-org/react';
+import { FaUserAlt, FaAddressCard } from 'react-icons/fa';
+import { IoIosExit } from 'react-icons/io';
+import { MdCloudUpload } from 'react-icons/md';
+import { NavLink, useNavigate } from 'react-router-dom';
+import classes from './MainLayout.module.css';
 
 const MainLayout = () => {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
 
-    navigate("/login");
-  }
+    navigate('/login');
+  };
 
   return (
     <div className={classes.main}>
       <Card className={classes.navigation}>
         <div className={classes.mainNav}>
-          <img className={classes.logo} src="" />
+          <img className={classes.logo} src="https://ncmsystem.azurewebsites.net/Images/admin.png" alt='logo' />
           <div className={classes.nav}>
-          <div className={classes.itemNav}>
-              <Tooltip
-                className={classes.tooltip}
-                placement="right"
-                content="Manager user"
-                color="invert"
-              >
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    isActive ? classes.activeNav : undefined
-                  }
-                >
-                  <MdSpaceDashboard size={26} color="ffffff" />
-                </NavLink>
-              </Tooltip>
-            </div>
             <div className={classes.itemNav}>
               <Tooltip
                 className={classes.tooltip}
@@ -94,11 +76,7 @@ const MainLayout = () => {
           </div>
         </div>
         <div className={classes.logout} onClick={handleLogout}>
-          <Tooltip
-            placement="right"
-            content="Logout"
-            color="invert"
-          >
+          <Tooltip placement="right" content="Logout" color="invert">
             <IoIosExit size={30} color="ffffff" />
           </Tooltip>
         </div>

@@ -8,6 +8,7 @@ import { ImportUserApis } from '../../api/ListApi';
 import { IoMdCloudDone } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
 import { TiWarning } from 'react-icons/ti';
+import { HiDocumentSearch } from 'react-icons/hi';
 import DetailUserImported from '../../components/DetailUserImported/DetailUserImported';
 
 import classes from './ImportUser.module.css';
@@ -18,6 +19,7 @@ const ImportUser = ({ title }) => {
   const [showModalUpload, setShowModalUpload] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [statusUpload, setStatusUpload] = useState('none');
 
   const [listUser, setListUser] = useState([]);
@@ -37,11 +39,15 @@ const ImportUser = ({ title }) => {
   };
 
   const loadDataUser = () => {
+    setLoading(true);
     FetchApi(ImportUserApis.listUserImport, undefined, undefined, undefined)
       .then((res) => {
         setListUser(res.data);
+        setLoading(false);
       })
-      .catch(() => {});
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
   const handleUploadFile = (e) => {
@@ -116,15 +122,11 @@ const ImportUser = ({ title }) => {
 
     if (saleDirector) {
       setShowWarning(true);
-      return
+      return;
     }
 
     executeImport();
   };
-
-  useEffect(() => {
-    console.log(listUser);
-  }, [listUser]);
 
   useEffect(() => {
     document.title = title;
@@ -191,13 +193,22 @@ const ImportUser = ({ title }) => {
           <Card
             css={{
               marginRight: 20,
-              minHeight: 500,
             }}
           >
             {!(listUser.length === 0) && (
               <TableContact data={listUser} onSelectColumn={handleSelectUser} />
             )}
-            {listUser.length === 0 && <Loading />}
+            {loading && listUser.length === 0 && (
+              <div className={classes.loadingDiv}>
+                <Loading />
+              </div>
+            )}
+            {!loading && listUser.length === 0 && (
+              <div className={classes.loadingDiv}>
+                <HiDocumentSearch color="#999999" size={30} />
+                <p><i>No user imported</i></p>
+              </div>
+            )}
           </Card>
         </Grid>
         <Grid sm={5.5}>
@@ -239,7 +250,14 @@ const ImportUser = ({ title }) => {
           <Button onClick={executeImport} auto flat color="warning">
             Accept
           </Button>
-          <Button onClick={() => {setShowWarning(false)}} auto>Cancel</Button>
+          <Button
+            onClick={() => {
+              setShowWarning(false);
+            }}
+            auto
+          >
+            Cancel
+          </Button>
         </Modal.Footer>
       </Modal>
       <Modal
