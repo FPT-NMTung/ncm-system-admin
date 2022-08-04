@@ -6,7 +6,7 @@ const Dashboard = ({title}) => {
 
   useEffect(() => {
     navigate('/user');
-  }, [])
+  }, [navigate])
 
   return <div></div>;
 };

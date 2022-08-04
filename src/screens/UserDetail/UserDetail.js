@@ -7,7 +7,9 @@ import { TiWarning, TiTick, TiDelete } from 'react-icons/ti';
 import classes from './UserDetail.module.css';
 import { useNavigate, useParams } from 'react-router-dom'
 import FetchApi from "../../api/FetchApi";
-import { ImportUserApis } from "../../api/ListApi";
+import { ContactApis, ImportUserApis } from "../../api/ListApi";
+import TableContactUser from "../../components/TableContactUser/TableContactUser";
+
 const listRole = [
   {
     id: 1,
@@ -27,6 +29,8 @@ const UserDetail = ({ title }) => {
   const navigator = useNavigate();
   const param = useParams()
   const [listEmail, setListEmail] = useState([]);
+  const [listContact, setListContact] = useState([]);
+  const [loadingContact, setLoadingContact] = useState(true);
   const [nameUser, setNameUser] = useState();
   const [emailUser, setEmailUser] = useState();
   const [selectRole, setSelectRole] = useState();
@@ -49,11 +53,18 @@ const UserDetail = ({ title }) => {
           setManagerEmail(res.data.email_manager)
           setIsActive(res.data.is_active)
           setNameUser(res.data.name)
-          setEmailUser(res.data.email)
+          setEmailUser(res.data.email)          
         })
         .catch((err) => {
 
         })
+      FetchApi(ContactApis.listContactUser, undefined, undefined, [param.id])
+        .then((res) => {
+          console.log(res.data)
+          setListContact(res.data)
+          setLoadingContact(false)         
+        })
+        .catch((err) => {})
     }
     FetchApi(ImportUserApis.listEmailUserActive, undefined, undefined, undefined)
       .then((res) => {
@@ -200,7 +211,7 @@ const UserDetail = ({ title }) => {
   return (
     <div>
       <Grid.Container>
-        <Grid sm={6.5}>
+        <Grid sm={5.5}>
           <div className={classes.main}>
             <Card
               css={{
@@ -305,11 +316,14 @@ const UserDetail = ({ title }) => {
             </Card>
           </div>
         </Grid>
-        {/* <Grid sm={5.5}>
+        <Grid sm={6.5}>
           <Card>
-            <div className={classes.loadingContact}><Text h4 size={16} color="#BDBDBD">Empty</Text></div>
+          <Text h3 css={{ margin: 20 }}>List contact</Text>
+            {listContact.length !== 0 && <TableContactUser listContact={listContact}/>}
+            {loadingContact && !listContact.length && <div className={classes.loadingContact}><Loading color='primary' /></div>}
+            {!listContact.length && !loadingContact && <div className={classes.loadingContact}><Text h4 size={16} color="#BDBDBD">Empty</Text></div>}
           </Card>
-        </Grid> */}
+        </Grid>
       </Grid.Container>
       <Modal
         aria-labelledby="modal-title"

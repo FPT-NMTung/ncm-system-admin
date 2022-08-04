@@ -52,7 +52,7 @@ export const ContactApis = {
     method: 'PATCH',
     contextType: 'application/json',
   },
-  listContact: {
+  listContactDeActiveUser: {
     url: '/api/admin/contacts/list-user-da/{0}',
     method: 'GET',
     contextType: 'application/json'
@@ -62,6 +62,11 @@ export const ContactApis = {
     method: 'PATCH',
     contextType: 'application/json'
   },
+  listContactUser: {
+    url:'/api/admin/contacts/list-user/{0}',
+    method: 'GET',
+    contextType: 'application/json'
+  }
 };
 
 export const ImportUserApis = {
@@ -103,6 +108,16 @@ export const ImportUserApis = {
   updateUserDetail: {
     url: '/api/admin/user/{0}',
     method: 'PUT',
+    contextType: 'application/json',
+  },
+  deleteAllUserImport: {
+    url: '/api/admin/user-imported',
+    method: 'DELETE',
+    contextType: 'application/json',
+  },
+  deleteUserImport: {
+    url: '/api/admin/user-imported/{0}',
+    method: 'DELETE',
     contextType: 'application/json',
   }
 };

@@ -5,6 +5,7 @@ import { Select } from 'antd';
 import classes from './DetailUserImported.module.css';
 import FetchApi from '../../api/FetchApi';
 import { ImportUserApis } from '../../api/ListApi';
+import { IoMdTrash } from 'react-icons/io';
 
 const listRole = [
   {
@@ -21,13 +22,14 @@ const listRole = [
   },
 ];
 
-const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
+const DetailUserImported = ({ list, userData, onChangeSuccess, onDeleteOne }) => {
   const [listEmail, setListEmail] = useState([]);
   const [selectRole, setSelectRole] = useState(undefined);
   const [selectManager, setSelectManager] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('none');
-
+  const [statusDelete, setStatusDelete] = useState(1);
+  const [executeDelete, setExecuteDelete] = useState(false);
   const refName = useRef();
   const refEmail = useRef();
 
@@ -43,11 +45,13 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
       refName.current.value = userData.name.trim();
       refEmail.current.value = userData.email.trim();
 
-      const listEmailUserImportBefore = list.filter((item) => {
-        return item.id < userData.id && item.role_id !== 1;
-      }).map((item) => {
-        return item.email;
-      })
+      const listEmailUserImportBefore = list
+        .filter((item) => {
+          return item.id < userData.id && item.role_id !== 1;
+        })
+        .map((item) => {
+          return item.email;
+        });
 
       FetchApi(
         ImportUserApis.listEmailUserActive,
@@ -70,6 +74,8 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
           console.log('error');
         });
     }
+
+    setStatusDelete(1);
   }, [userData, list]);
 
   const handleChangeRole = (e) => {
@@ -78,6 +84,17 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
 
   const handleChangeManager = (e) => {
     setSelectManager(e);
+  };
+
+  const handleBtnDelete = () => {
+    if (statusDelete === 1) {
+      setStatusDelete(2);
+      return;
+    }
+
+    onDeleteOne(userData.id);
+    FetchApi(ImportUserApis.deleteUserImport, undefined, undefined, [`${userData.id}`])
+      .then((res) => {})
   };
 
   const handleSubmitForm = () => {
@@ -227,24 +244,38 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
               </Fragment>
             )}
             <Spacer y={1.5} />
-            <Button
-              onClick={handleSubmitForm}
-              disabled={userData.status === 2 || loading}
-              css={{ width: 100 }}
-              color={
-                status === 'none'
-                  ? 'primary'
-                  : status === 'success'
-                  ? 'success'
-                  : 'error'
-              }
-              auto
-            >
-              {!loading && status === 'none' && 'Save'}
-              {!loading && status === 'success' && 'Success'}
-              {!loading && status === 'fail' && 'Failed'}
-              {loading && <Loading size="xs" />}
-            </Button>
+            <div className={classes.groupButton}>
+              <Button
+                onClick={handleSubmitForm}
+                disabled={userData.status === 2 || loading}
+                css={{ width: 100 }}
+                color={
+                  status === 'none'
+                    ? 'primary'
+                    : status === 'success'
+                    ? 'success'
+                    : 'error'
+                }
+                auto
+              >
+                {!loading && status === 'none' && 'Save'}
+                {!loading && status === 'success' && 'Success'}
+                {!loading && status === 'fail' && 'Failed'}
+                {loading && <Loading size="xs" />}
+              </Button>
+              <Button
+                disabled={userData.status === 2 || loading}
+                color={'error'}
+                icon={<IoMdTrash size={20} />}
+                onClick={handleBtnDelete}
+                auto
+                flat={statusDelete === 1}
+              >
+                {!executeDelete && statusDelete === 1 && 'Delete'}
+                {!executeDelete && statusDelete === 2 && 'Click again to delete'}
+                {executeDelete && <Loading size="xs" />}
+              </Button>
+            </div>
           </div>
         </div>
       )}

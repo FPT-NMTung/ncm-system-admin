@@ -29,7 +29,7 @@ const TableUserDeActive = ({ listUser, onSelectColumn }) => {
                     )
                 })}
             </Table.Body>
-            <Table.Pagination align='start' rowsPerPage={10} />
+            <Table.Pagination shadow noMargin align='center' rowsPerPage={10} />
         </Table>
     );
 };
