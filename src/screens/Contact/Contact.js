@@ -86,7 +86,7 @@ const Contact = ({ title }) => {
   }
 
   const loadListContact = (id) => {
-    FetchApi(ContactApis.listContact, undefined, undefined, [id])
+    FetchApi(ContactApis.listContactDeActiveUser, undefined, undefined, [id])
       .then((res) => {
         setListContact(res.data);
         setLoadingContact(false);
@@ -187,7 +187,7 @@ const Contact = ({ title }) => {
         <Grid.Container sm={5.5} direction="column">
           <Card>
             <Text h3 css={{ margin: 20 }}>List contact</Text>
-            {listContact.length !== 0 && <TableContactDeActive listContact={listContact} onSelectColumn={onSelectColumnContact} />}
+            {listContact.length !== 0 && <TableContactDeActive listContact={listContact} onSelectColumn={onSelectColumnContact}/>}
             {loadingContact && !listContact.length && <div className={classes.loadingContact}><Loading color='primary' /></div>}
             {!listContact.length && !loadingContact && <div className={classes.loadingContact}><Text h4 size={16} color="#BDBDBD">Empty</Text></div>}
           </Card>
