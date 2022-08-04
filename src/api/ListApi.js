@@ -33,6 +33,11 @@ export const UserApis = {
     url: '/api/admin/search',
     method: 'GET',
     contextType: 'application/json',
+  },
+  exportUser: {
+    url: '/api/admin/user/export',
+    method: 'POST',
+    contextType: 'application/json',
   }
 };
 

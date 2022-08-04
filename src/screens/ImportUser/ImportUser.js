@@ -166,6 +166,7 @@ const ImportUser = ({ title }) => {
     })
 
     setListUser([...filter]);
+    setSelectEditUser(undefined);
   }
 
   useEffect(() => {
