@@ -264,7 +264,6 @@ const DetailUserImported = ({ list, userData, onChangeSuccess, onDeleteOne }) =>
                 {loading && <Loading size="xs" />}
               </Button>
               <Button
-                disabled={userData.status === 2 || loading}
                 color={'error'}
                 icon={<IoMdTrash size={20} />}
                 onClick={handleBtnDelete}

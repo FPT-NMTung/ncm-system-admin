@@ -17,6 +17,7 @@ import classes from './TableUser.module.css';
 import FetchApi from '../../api/FetchApi';
 import { UserApis } from '../../api/ListApi';
 import { useNavigate } from 'react-router-dom';
+import { TbDatabaseExport } from 'react-icons/tb';
 
 function toLowerCaseNonAccentVietnamese(str) {
   str = str.toLowerCase();
@@ -39,6 +40,7 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
   const [search, setSearch] = useState('');
   const [listSearchUser, setListSearchUser] = useState([]);
   const [parent, setParent] = useState(undefined);
+  const [isExport, setIsExport] = useState(false);
 
   useEffect(() => {
     FetchApi(UserApis.searchUser, undefined, { param: '' }, undefined)
@@ -124,8 +126,29 @@ const TableUser = ({ dataUser, onChangeSelectUser }) => {
             flat
             icon={<FaUserPlus size={18} />}
             onPress={() => navigation('/user/add')}
+            auto
           >
             Add User
+          </Button>
+          <Button
+            flat
+            icon={isExport ? <Loading size='xs' color={'currentColor'}/> : <TbDatabaseExport size={18} />}
+            disabled={isExport}
+            auto
+            color={'warning'}
+            onPress={() => {
+              setIsExport(true);
+              FetchApi(UserApis.exportUser, undefined, undefined, undefined)
+                .then((res) => {
+                  window.open(res.data.link);
+                  setIsExport(false);
+                })
+                .catch(() => {
+                  setIsExport(false);
+                });
+            }}
+          >
+            Export Users
           </Button>
         </div>
       </Card>
