@@ -104,6 +104,16 @@ export const ImportUserApis = {
     url: '/api/admin/user/{0}',
     method: 'PUT',
     contextType: 'application/json',
+  },
+  deleteAllUserImport: {
+    url: '/api/admin/user-imported',
+    method: 'DELETE',
+    contextType: 'application/json',
+  },
+  deleteUserImport: {
+    url: '/api/admin/user-imported/{0}',
+    method: 'DELETE',
+    contextType: 'application/json',
   }
 };
 

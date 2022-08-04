@@ -59,7 +59,7 @@ const TableContact = (props) => {
                 <div className={classes.icon}>
                   {item.status === 2 && <Tooltip color={'success'} content="Success"><HiCheckCircle color="1fb848" size={16} /></Tooltip>}
                   {item.status === 3 && <Tooltip color={'error'} content="Error"><MdOutlineError color="f23a65" size={16} /></Tooltip>}
-                  {item.status === 4 && <Tooltip content="Pending ..."><Loading color={'success'} size="xs" /></Tooltip>}
+                  {item.status === 4 && <Tooltip content="Pending ..."><Loading color={'default'} size="xs" /></Tooltip>}
                   {item.status === 1 && <div/>}
                 </div>
               </Table.Cell>

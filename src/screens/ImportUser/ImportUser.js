@@ -6,7 +6,7 @@ import { Upload } from 'antd';
 import FetchApi from '../../api/FetchApi';
 import { ImportUserApis } from '../../api/ListApi';
 import { IoMdCloudDone } from 'react-icons/io';
-import { MdError } from 'react-icons/md';
+import { MdError, MdDelete } from 'react-icons/md';
 import { TiWarning } from 'react-icons/ti';
 import { HiDocumentSearch } from 'react-icons/hi';
 import DetailUserImported from '../../components/DetailUserImported/DetailUserImported';
@@ -17,10 +17,13 @@ const { Dragger } = Upload;
 
 const ImportUser = ({ title }) => {
   const [showModalUpload, setShowModalUpload] = useState(false);
+  const [showModalWarningClearAll, setShowModalWarningClearAll] =
+    useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [statusUpload, setStatusUpload] = useState('none');
+  const [isExecute, setIsExecute] = useState(false);
 
   const [listUser, setListUser] = useState([]);
   const [selectEditUser, setSelectEditUser] = useState(undefined);
@@ -87,6 +90,7 @@ const ImportUser = ({ title }) => {
 
   const executeImport = async () => {
     setShowWarning(false);
+    setIsExecute(true);
     for (let index = 0; index < listUser.length; index++) {
       const user = listUser[index];
 
@@ -113,9 +117,14 @@ const ImportUser = ({ title }) => {
         }
       }
     }
+    setIsExecute(false);
   };
 
   const handleExecuteButtonClick = () => {
+    if (isExecute) {
+      return;
+    }
+
     const saleDirector = listUser.find((user) => {
       return user.role_id === 3;
     });
@@ -125,8 +134,39 @@ const ImportUser = ({ title }) => {
       return;
     }
 
+    for (let index = 0; index < listUser.length; index++) {
+      const user = listUser[index];
+      if (user.status !== 2) {
+        user.status = 4
+      }
+    }
+
+    setListUser([...listUser]);
+
     executeImport();
   };
+
+  const handleClearAllBtnClick = () => {
+    setShowModalWarningClearAll(true);
+  };
+
+  const handleActionClearAll = () => {
+    FetchApi(ImportUserApis.deleteAllUserImport, undefined, undefined, undefined)
+    .then(() => {
+    })
+
+    setShowModalWarningClearAll(false);
+    setListUser([]);
+    setSelectEditUser(undefined);
+  }
+
+  const handleDeleteOneUser = (userId) => {
+    const filter = listUser.filter((user) => {
+      return user.id !== userId;
+    })
+
+    setListUser([...filter]);
+  }
 
   useEffect(() => {
     document.title = title;
@@ -144,9 +184,20 @@ const ImportUser = ({ title }) => {
               padding: 20,
             }}
           >
-            <Text h2 css={{ margin: 0 }}>
-              Import user
-            </Text>
+            <div className={classes.titleHeader}>
+              <Text h2 css={{ margin: 0 }}>
+                Import user
+              </Text>
+              <Button
+                flat
+                auto
+                color={'error'}
+                icon={<MdDelete size={20} />}
+                onClick={handleClearAllBtnClick}
+              >
+                Clear all data
+              </Button>
+            </div>
           </Card>
         </Grid>
         <Grid sm={5.5}>
@@ -159,7 +210,7 @@ const ImportUser = ({ title }) => {
                 icon={<IoMdCloudDownload size={20} />}
                 onClick={() => {
                   window.open(
-                    'https://ncmsystem.azurewebsites.net/Template/ImportUsers.xlsx'
+                    'https://ncmsystem.azurewebsites.net/Template/Template_Import.xlsx'
                   );
                 }}
               >
@@ -178,11 +229,12 @@ const ImportUser = ({ title }) => {
                 flat
                 auto
                 color={'success'}
-                css={{ width: 130 }}
-                icon={<IoMdCloudUpload size={20} />}
+                css={{ width: 180 }}
+                disabled={isExecute}
+                icon={isExecute ? <Loading size='xs' color={'currentColor'}/> : <IoMdCloudUpload size={20} />}
                 onPress={handleExecuteButtonClick}
               >
-                Execute import
+                {isExecute ? "Executing ..." : "Execute import"}
               </Button>
             </div>
           </Card>
@@ -196,7 +248,7 @@ const ImportUser = ({ title }) => {
             }}
           >
             {!(listUser.length === 0) && (
-              <TableContact data={listUser} onSelectColumn={handleSelectUser} />
+              <TableContact data={listUser} onSelectColumn={handleSelectUser}/>
             )}
             {loading && listUser.length === 0 && (
               <div className={classes.loadingDiv}>
@@ -206,7 +258,9 @@ const ImportUser = ({ title }) => {
             {!loading && listUser.length === 0 && (
               <div className={classes.loadingDiv}>
                 <HiDocumentSearch color="#999999" size={30} />
-                <p><i>No user imported</i></p>
+                <p>
+                  <i>No user imported</i>
+                </p>
               </div>
             )}
           </Card>
@@ -216,6 +270,7 @@ const ImportUser = ({ title }) => {
             list={listUser}
             userData={selectEditUser}
             onChangeSuccess={handleChangeUserSuccess}
+            onDeleteOne={handleDeleteOneUser}
           />
         </Grid>
       </Grid.Container>
@@ -253,6 +308,43 @@ const ImportUser = ({ title }) => {
           <Button
             onClick={() => {
               setShowWarning(false);
+            }}
+            auto
+          >
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        closeButton
+        aria-labelledby="modal-title"
+        width={500}
+        open={showModalWarningClearAll}
+        onClose={() => {
+          setShowModalWarningClearAll(false);
+        }}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiWarning size={30} color={'#ffc107'} />
+            <p>Warning !</p>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            The system will delete all users in the table,{' '}
+            <strong>this action cannot be undone. </strong>
+          </p>
+          <p>Are you sure to do it or not?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto flat color="error" onClick={handleActionClearAll}>
+            Clear all data
+          </Button>
+          <Button
+            onClick={() => {
+              setShowModalWarningClearAll(false);
             }}
             auto
           >
