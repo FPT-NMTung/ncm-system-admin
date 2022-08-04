@@ -35,3 +35,9 @@
     margin-bottom: 6px;
     padding-left : 3px;
 }
+
+.groupButton {
+    display       : flex;
+    flex-direction: row;
+    column-gap    : 20px;
+}
