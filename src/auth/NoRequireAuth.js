@@ -7,7 +7,7 @@ function NoRequireAuth({ children }) {
     localStorage.getItem("access_token") &&
     localStorage.getItem("refresh_token")
   ) {
-    return <Navigate to="/" state={{ from: location }} replace />;
+    return <Navigate to="/user" state={{ from: location }} replace />;
   }
 
   localStorage.removeItem("access_token");

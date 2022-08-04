@@ -39,9 +39,6 @@ const User = ({ title }) => {
       );
     }
 
-    let zoom = d3.behavior.zoom().scaleExtent([0.1, 5]).on('zoom', handleZoom);
-    zoom.scale(1);
-
     function centerNode(source, userId) {
       const target = source.find((e) => {
         if (userId === undefined) {
@@ -76,8 +73,6 @@ const User = ({ title }) => {
       zoom.scale(scale);
       zoom.translate([x, y]);
     }
-
-    d3.select(graphRef.current).call(zoom);
 
     const tree = d3.layout.tree().size([800, 800]).nodeSize([50, 50]);
     const nodes = tree.nodes(data).reverse();
@@ -198,6 +193,55 @@ const User = ({ title }) => {
         handleClickUserGraph(d);
       });
 
+    let zoom = d3.behavior.zoom().scaleExtent([0.05, 5]).on('zoom', handleZoom);
+    zoom.scale(1);
+
+    
+
+    const heightSvg = graphRef.current.scrollHeight;
+    const widthSvg = graphRef.current.scrollWidth;
+
+    let properties = {
+      minWidth: 0,
+      minHeight: 0,
+      maxWidth: 0,
+      maxHeight: 0,
+    };
+
+    nodes.forEach((item) => {
+      if (properties.minWidth > item.y) {
+        properties.minWidth = item.y;
+      }
+
+      if (properties.minHeight > item.x) {
+        properties.minHeight = item.x;
+      }
+
+      if (properties.maxWidth < item.y) {
+        properties.maxWidth = item.y;
+      }
+
+      if (properties.maxHeight < item.x) {
+        properties.maxHeight = item.x;
+      }
+    });
+
+    const ratioDiv =
+      (properties.maxHeight - properties.minHeight) /
+      (properties.maxWidth - properties.minWidth);
+    const ratioReal = heightSvg / widthSvg;
+
+    if (ratioDiv > ratioReal) {
+      zoom.scale(
+        (heightSvg * 90) / 100 / (properties.maxHeight - properties.minHeight)
+      );
+    } else {
+      zoom.scale(
+        (widthSvg * 90) / 100 / (properties.maxWidth - properties.minWidth)
+      );
+    }
+
+    d3.select(graphRef.current).call(zoom);
     centerNode(nodes);
   };
 

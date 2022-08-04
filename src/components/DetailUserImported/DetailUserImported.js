@@ -59,7 +59,10 @@ const DetailUserImported = ({ list, userData, onChangeSuccess }) => {
           const data = res.data.map((item) => {
             return item.email;
           });
-          setListEmail([...data, ...listEmailUserImportBefore]);
+          const tempList = [...data, ...listEmailUserImportBefore];
+          // remove duplicate
+          const listEmailUserImport = [...new Set(tempList)];
+          setListEmail(listEmailUserImport);
           setSelectRole(userData.role_id);
           setSelectManager(userData.manager);
         })

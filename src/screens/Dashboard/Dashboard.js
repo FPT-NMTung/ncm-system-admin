@@ -1,11 +1,14 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = ({title}) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    document.title = title
+    navigate('/user');
   }, [])
 
-  return <div>Dashboard</div>;
+  return <div></div>;
 };
 
 export default Dashboard;
