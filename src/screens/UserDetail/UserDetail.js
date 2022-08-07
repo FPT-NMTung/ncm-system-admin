@@ -154,7 +154,7 @@ const UserDetail = ({ title }) => {
       .catch((err) => {
         if (err.message === 'A0011') {
           setAlertError(true);
-          setAlertErrorMessage("Can't deactive manager has child")
+          setAlertErrorMessage("Can't deactivate manager has child")
         }
         if(err.message === 'A0004'){
           setAlertError(true);
