@@ -115,7 +115,6 @@ const Contact = ({ title }) => {
   }
 
   const handleTransfer = () => {
-
     if (!listSelectContact.length) {
       setAlertContact(true);
     }
@@ -124,7 +123,7 @@ const Contact = ({ title }) => {
     }
     if (listSelectContact.length !== 0 && email !== '') {
       setDisabledTransfer(true);
-      let from = listUserDeActive.find((item) => item.id === selectUser).email
+      let from = listUserDeActive.find((item) => item.id == selectUser).email
       let body = {
         from: from,
         contact_id: listSelectContact,

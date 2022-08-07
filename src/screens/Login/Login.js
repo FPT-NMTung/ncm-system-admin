@@ -71,7 +71,7 @@ const Login = ({ title }) => {
       <div className={classes.backgroundA} />
       <div className={classes.backgroundB} />
       <img
-        src="https://ncmsystem.azurewebsites.net/Images/NCM.png"
+        src="https://ncmsystem.azurewebsites.net/Images/NCM-logo.png"
         alt='NCM'
         className={classes.logo}
       />
