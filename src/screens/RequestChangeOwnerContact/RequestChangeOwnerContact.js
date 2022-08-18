@@ -26,7 +26,9 @@ const RequestChangeOwnerContact = ({ title }) => {
         setData(res.data);
       })
       .catch(() => {
-        navigate('/404', { replace: true });
+        console.log('id', id)
+        console.log('code', code)
+        // navigate('/404', { replace: true });
       });
   }, []);
 
