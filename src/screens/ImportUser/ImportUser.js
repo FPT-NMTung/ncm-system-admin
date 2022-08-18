@@ -293,12 +293,12 @@ const ImportUser = ({ title }) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            In your import user list there is{' '}
+            In your import user list, there is{' '}
             <strong>one or more sales director</strong>. If you continue, the
             system will:
           </p>
           <ul>
-            <li>Deactive sales director current.</li>
+            <li>Deactivate sales director current.</li>
             <li>Transfer employees to new sales director.</li>
           </ul>
         </Modal.Body>
