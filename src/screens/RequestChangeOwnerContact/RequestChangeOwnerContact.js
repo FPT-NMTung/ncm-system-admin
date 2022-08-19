@@ -1,8 +1,8 @@
 import classes from './RequestChangeOwnerContact.module.css';
-import { Card, Text, Row, Button, Loading } from '@nextui-org/react';
+import { Card, Text, Row, Button, Loading, Modal } from '@nextui-org/react';
 import { MdEmail } from 'react-icons/md';
 import { BsTelephoneFill } from 'react-icons/bs';
-import { TiLocation } from 'react-icons/ti';
+import { TiLocation, TiTick, TiDelete } from 'react-icons/ti';
 import { useEffect, useState } from 'react';
 import FetchApi from '../../api/FetchApi';
 import { ContactApis } from '../../api/ListApi';
@@ -12,7 +12,10 @@ const RequestChangeOwnerContact = ({ title }) => {
   const [data, setData] = useState(null);
   const [loadingAccept, setLoadingAccept] = useState(false);
   const [loadingReject, setLoadingReject] = useState(false);
-
+  const [openModalSuccess, setOpenModalSucess] = useState(false);
+  const [openModalError, setOpenModalError] = useState('');
+  const [modalContent, setModalContent] = useState('');
+  const [disabledButton, setDisabledButton] = useState(false);
   const { id, code } = useParams();
   const navigate = useNavigate();
 
@@ -30,6 +33,18 @@ const RequestChangeOwnerContact = ({ title }) => {
       });
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setOpenModalSucess(false);
+    }, 1500);
+  }, [openModalSuccess]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setOpenModalError(false);
+    }, 1500);
+  }, [openModalError]);
+
   const handlerAccept = () => {
     setLoadingReject(true);
     FetchApi(
@@ -39,11 +54,14 @@ const RequestChangeOwnerContact = ({ title }) => {
       [id, code]
     )
       .then(() => {
-        console.log('accept success');
+        setOpenModalSucess(true);
+        setModalContent('Accept success');
+        setDisabledButton(true);
         setLoadingReject(false);
       })
       .catch(() => {
-        console.log('accept error');
+        setOpenModalError(true);
+        setModalContent('Accept error');
         setLoadingReject(false);
       });
   };
@@ -57,11 +75,14 @@ const RequestChangeOwnerContact = ({ title }) => {
       [id, code]
     )
       .then(() => {
-        console.log('reject success');
+        setOpenModalSucess(true);
+        setModalContent('Reject success');
+        setDisabledButton(true);
         setLoadingReject(false);
       })
       .catch(() => {
-        console.log('reject error');
+        setOpenModalError(true);
+        setModalContent('Reject error');
         setLoadingReject(false);
       });
   };
@@ -110,7 +131,7 @@ const RequestChangeOwnerContact = ({ title }) => {
           <div className={classes.button}>
             <Button
               onClick={handlerAccept}
-              disabled={loadingReject || loadingAccept}
+              disabled={loadingReject || loadingAccept || disabledButton}
               css={{ width: 100 }}
               color={'success'}
               auto
@@ -120,7 +141,7 @@ const RequestChangeOwnerContact = ({ title }) => {
             </Button>
             <Button
               onClick={handlerReject}
-              disabled={loadingReject || loadingAccept}
+              disabled={loadingReject || loadingAccept || disabledButton}
               css={{ width: 100 }}
               color={'error'}
               auto
@@ -131,6 +152,35 @@ const RequestChangeOwnerContact = ({ title }) => {
           </div>
         </Card>
       )}
+      <Modal
+        aria-labelledby="modal-title"
+        width={300}
+        open={openModalSuccess}
+        onClose={() => setOpenModalSucess(false)}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiTick size={30} color={'#17c964'} />
+            <p>{modalContent}</p>
+          </div>
+        </Modal.Header>
+      </Modal>
+
+      <Modal
+        aria-labelledby="modal-title"
+        width={300}
+        open={openModalError}
+        onClose={() => setOpenModalError(false)}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiDelete size={30} color={'#f31260'} />
+            <p>{modalContent}</p>
+          </div>
+        </Modal.Header>
+      </Modal>
     </div>
   );
 };
