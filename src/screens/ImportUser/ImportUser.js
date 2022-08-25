@@ -13,6 +13,15 @@ import DetailUserImported from '../../components/DetailUserImported/DetailUserIm
 
 import classes from './ImportUser.module.css';
 
+const errorMessage = {
+  A0005: '"Email manager" is required if not the sales director.',
+  A0006: 'Error with code A0006',
+  A0008: 'This email is already in the system, please check again.',
+  A0009: 'Role not valid.',
+  A00010:
+    '"Email manager" you are selecting currently has the role: "Staff". Staff cannot have subordinates.',
+};
+
 const { Dragger } = Upload;
 
 const ImportUser = ({ title }) => {
@@ -24,7 +33,7 @@ const ImportUser = ({ title }) => {
   const [loading, setLoading] = useState(false);
   const [statusUpload, setStatusUpload] = useState('none');
   const [isExecute, setIsExecute] = useState(false);
-
+  const [errorCode, setErrorCode] = useState(undefined);
   const [listUser, setListUser] = useState([]);
   const [selectEditUser, setSelectEditUser] = useState(undefined);
 
@@ -101,7 +110,8 @@ const ImportUser = ({ title }) => {
           .then(() => {
             user.status = 2;
           })
-          .catch(() => {
+          .catch((e) => {
+            setErrorCode(e.message);
             user.status = 3;
           });
         setListUser([...listUser]);
@@ -137,7 +147,7 @@ const ImportUser = ({ title }) => {
     for (let index = 0; index < listUser.length; index++) {
       const user = listUser[index];
       if (user.status !== 2) {
-        user.status = 4
+        user.status = 4;
       }
     }
 
@@ -151,23 +161,26 @@ const ImportUser = ({ title }) => {
   };
 
   const handleActionClearAll = () => {
-    FetchApi(ImportUserApis.deleteAllUserImport, undefined, undefined, undefined)
-    .then(() => {
-    })
+    FetchApi(
+      ImportUserApis.deleteAllUserImport,
+      undefined,
+      undefined,
+      undefined
+    ).then(() => {});
 
     setShowModalWarningClearAll(false);
     setListUser([]);
     setSelectEditUser(undefined);
-  }
+  };
 
   const handleDeleteOneUser = (userId) => {
     const filter = listUser.filter((user) => {
       return user.id !== userId;
-    })
+    });
 
     setListUser([...filter]);
     setSelectEditUser(undefined);
-  }
+  };
 
   useEffect(() => {
     document.title = title;
@@ -232,10 +245,16 @@ const ImportUser = ({ title }) => {
                 color={'success'}
                 css={{ width: 180 }}
                 disabled={isExecute}
-                icon={isExecute ? <Loading size='xs' color={'currentColor'}/> : <IoMdCloudUpload size={20} />}
+                icon={
+                  isExecute ? (
+                    <Loading size="xs" color={'currentColor'} />
+                  ) : (
+                    <IoMdCloudUpload size={20} />
+                  )
+                }
                 onPress={handleExecuteButtonClick}
               >
-                {isExecute ? "Executing ..." : "Execute import"}
+                {isExecute ? 'Executing ...' : 'Execute import'}
               </Button>
             </div>
           </Card>
@@ -249,7 +268,7 @@ const ImportUser = ({ title }) => {
             }}
           >
             {!(listUser.length === 0) && (
-              <TableContact data={listUser} onSelectColumn={handleSelectUser}/>
+              <TableContact data={listUser} onSelectColumn={handleSelectUser} />
             )}
             {loading && listUser.length === 0 && (
               <div className={classes.loadingDiv}>
@@ -350,6 +369,35 @@ const ImportUser = ({ title }) => {
             auto
           >
             Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        aria-labelledby="modal-title"
+        open={errorCode !== undefined}
+        // preventClose={uploading}
+        // onClose={handleChangeVisibleUpload}
+        width={600}
+        css={{ padding: '20px' }}
+      >
+        <Modal.Header>
+          <div className={classes.warningHeader}>
+            <TiWarning size={30} color={'red'} />
+            <p>Error import user!</p>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{errorMessage[errorCode]}</p>
+          <p>
+            <i>
+              After re-check your information, please press "Execute import"
+              button again.
+            </i>
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => {setErrorCode(undefined)}} auto flat color="error">
+            OK, I understand
           </Button>
         </Modal.Footer>
       </Modal>
