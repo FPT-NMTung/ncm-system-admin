@@ -156,6 +156,10 @@ const UserDetail = ({ title }) => {
           setAlertError(true);
           setAlertErrorMessage("Can't deactivate manager has child")
         }
+        if (err.message === 'A0013') {
+          setAlertError(true);
+          setAlertErrorMessage("The role cannot be changed to Staff when it has an employee under it.")
+        }
         if(err.message === 'A0004'){
           setAlertError(true);
           setAlertErrorMessage("Request Change invalid")
