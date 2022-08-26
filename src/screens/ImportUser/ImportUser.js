@@ -18,8 +18,9 @@ const errorMessage = {
   A0006: 'Error with code A0006',
   A0008: 'This email is already in the system, please check again.',
   A0009: 'Role not valid.',
-  A00010:
+  A0010:
     '"Email manager" you are selecting currently has the role: "Staff". Staff cannot have subordinates.',
+  A0012: 'Name or Email not valid.',
 };
 
 const { Dragger } = Upload;
