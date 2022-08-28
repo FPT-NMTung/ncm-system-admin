@@ -1,5 +1,5 @@
 import classes from './RequestChangeOwnerContact.module.css';
-import { Card, Text, Row, Button, Loading, Modal } from '@nextui-org/react';
+import { Card, Text, Row, Button, Loading, Modal, Spacer } from '@nextui-org/react';
 import { MdEmail } from 'react-icons/md';
 import { BsTelephoneFill } from 'react-icons/bs';
 import { TiLocation, TiTick, TiDelete } from 'react-icons/ti';
@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import FetchApi from '../../api/FetchApi';
 import { ContactApis } from '../../api/ListApi';
 import { useParams, useNavigate } from 'react-router-dom';
+import { BiTransferAlt } from 'react-icons/bi';
 
 const RequestChangeOwnerContact = ({ title }) => {
   const [data, setData] = useState(null);
@@ -16,6 +17,7 @@ const RequestChangeOwnerContact = ({ title }) => {
   const [openModalError, setOpenModalError] = useState('');
   const [modalContent, setModalContent] = useState('');
   const [disabledButton, setDisabledButton] = useState(false);
+  const [message, setMessage] = useState(undefined);
   const { id, code } = useParams();
   const navigate = useNavigate();
 
@@ -28,8 +30,15 @@ const RequestChangeOwnerContact = ({ title }) => {
       .then((res) => {
         setData(res.data);
       })
-      .catch(() => {
-        navigate('/404', { replace: true });
+      .catch((e) => {
+        switch (e.message) {
+          case 'C0019':
+            navigate('/404', { replace: true });
+            break;
+          default:
+            setMessage(e.message);
+            break;
+        }
       });
   }, []);
 
@@ -90,7 +99,25 @@ const RequestChangeOwnerContact = ({ title }) => {
   return (
     <div className={classes.main}>
       <Card css={{ mw: '500px', h: '270px', margin: '0 auto', padding: 30 }}>
-        {!data && (
+        {!data && message === "R0001" && (
+          <div className={classes.loadingCard}>
+            <BiTransferAlt color='#cc3b0e' size={30}/>
+            <Spacer y/>
+            <Text color="#cc3b0e" size="16">
+              Request has been rejected
+            </Text>
+          </div>
+        )}
+        {!data && message === "R0003" && (
+          <div className={classes.loadingCard}>
+            <BiTransferAlt color='#0ec914' size={30}/>
+            <Spacer y/>
+            <Text color="#0ec914" size="16">
+              Request has been accepted
+            </Text>
+          </div>
+        )}
+        {!data && !message && (
           <div className={classes.loadingCard}>
             <Loading>Getting data ...</Loading>
           </div>
