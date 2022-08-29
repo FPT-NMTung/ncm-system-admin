@@ -95,7 +95,7 @@ const User = ({ title }) => {
       .attr('class', 'link')
       .attr('d', line)
       .attr('fill', 'none')
-      .attr('stroke', '#3d3d3d')
+      .attr('stroke', '#4c4c4c')
       .attr('stroke-width', '2px');
 
     const node = svg
@@ -130,7 +130,7 @@ const User = ({ title }) => {
 
     node
       .append('text')
-      .attr('fill', '#b8b8b8')
+      .attr('fill', '#dfdfdf')
       .attr('font-size', '10px')
       .attr('cursor', 'pointer')
       .text(function (d) {
