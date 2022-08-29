@@ -60,7 +60,6 @@ const UserDetail = ({ title }) => {
         })
       FetchApi(ContactApis.listContactUser, undefined, undefined, [param.id])
         .then((res) => {
-          console.log(res.data)
           setListContact(res.data)
           setLoadingContact(false)         
         })
@@ -129,6 +128,12 @@ const UserDetail = ({ title }) => {
       return;
     }
 
+    if(selectRole === 3 && selectRole !== user.role_id && listContact && listContact.length !== 0){
+      setAlertError(true);
+      setAlertErrorMessage("You can't change role to sale director if you have contact");
+      return
+    }
+
     if (selectRole === 3 && selectRole !== user.role_id) {
       setShowWarning(true);
       return;
@@ -152,17 +157,25 @@ const UserDetail = ({ title }) => {
         }, 1000);
       })
       .catch((err) => {
+        if (err.message === 'A0013') {
+          setAlertError(true)
+          setAlertErrorMessage("Can't update role to staff if you have child")
+          return
+        }
         if (err.message === 'A0011') {
           setAlertError(true);
           setAlertErrorMessage("Can't deactivate manager has child")
+          return
         }
         if(err.message === 'A0004'){
           setAlertError(true);
           setAlertErrorMessage("Request Change invalid")
+          return
         }
         if(err.message === 'A0005'){
           setAlertError(true);
           setAlertErrorMessage("Email invalid")
+          return
         }       
       })
   }
@@ -187,7 +200,12 @@ const UserDetail = ({ title }) => {
           navigator('/user');
         }, 1000);
       })
-      .catch((err) => {       
+      .catch((err) => {     
+        if (err.message === 'A0013') {
+          setAlertError(true)
+          setAlertErrorMessage("Can't update role to staff if you have child")
+          return
+        }  
         if (err.message === 'A0011') {
           setAlertError(true);
           setAlertErrorMessage("Can't deactive manager has child")
